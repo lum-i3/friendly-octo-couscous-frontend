@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./../Style/login.css";
+import Imagen from './../assets/General/ImagenLogin.avif';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -93,7 +94,7 @@ function Login() {
         <Col lg={6} className="image-column d-none d-lg-block h-100">
           <div className="split-image-curve">
             <img 
-              src="https://images.unsplash.com/photo-1614021926166-f5e89b0bf933?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+              src={Imagen}
               alt="Weather and hybrid energy landscape" 
               className="split-bg-img"
             />
