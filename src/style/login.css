@@ -1,0 +1,155 @@
+/* 1. RESETEO GLOBAL DE PANTALLA COMPLETA */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Elimina barras de scroll no deseadas */
+  background-color: #f4f7f5; /* Tono grisáceo/hueso muy suave de fondo */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.login-screen {
+  width: 100%;
+  height: 100vh;
+}
+
+/* 2. ESTILO DEL CONTENEDOR DEL FORMULARIO (CARD) */
+.form-column {
+  background-color: #f4f7f5;
+  padding: 2rem;
+}
+
+/* El recuadro blanco estilizado de la imagen */
+.login-card-container {
+  background-color: #ffffff;
+  padding: 3rem 2.5rem;
+  border-radius: 24px; /* Bordes súper redondeados como en la foto */
+  box-shadow: 0 10px 30px rgba(17, 75, 95, 0.06); /* Sombra muy sutil */
+  max-width: 460px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #0f4c5c; /* Azul petróleo */
+  margin-bottom: 0.3rem;
+}
+
+.login-subtitle {
+  color: #a0b1b5;
+  font-size: 0.95rem;
+}
+
+/* 3. INPUTS Y TEXTOS DEL FORMULARIO */
+.input-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f4c5c;
+  margin-bottom: 0.4rem;
+}
+
+.custom-input-field {
+  background-color: #ebf2f4 !important; /* Color azul claro de fondo */
+  border: 1px solid #d0e1e5 !important;
+  color: #0f4c5c !important;
+  padding: 0.8rem 1rem !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem;
+}
+
+.custom-input-field::placeholder {
+  color: #a3bdc4;
+}
+
+.custom-input-field:focus {
+  box-shadow: 0 0 0 0.25rem rgba(15, 76, 92, 0.1) !important;
+  border-color: #a3bdc4 !important;
+}
+
+/* Manejo del ojo de la contraseña */
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #0f4c5c;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+/* Opciones extra (checkbox y link) */
+.extra-options-row {
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.checkbox-custom label {
+  color: #637d84;
+  cursor: pointer;
+}
+
+.forgot-password-link {
+  color: #0f4c5c;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+/* 4. BOTÓN PRINCIPAL */
+.btn-login-submit {
+  background-color: #166985 !important; /* Azul petróleo sólido */
+  border: none !important;
+  padding: 0.85rem !important;
+  font-size: 1rem !important;
+  font-weight: 600;
+  border-radius: 10px !important;
+  transition: all 0.2s ease;
+}
+
+.btn-login-submit:hover {
+  background-color: #0f4c5c !important;
+}
+
+.register-redirect {
+  font-size: 0.9rem;
+}
+
+.register-link {
+  color: #166985;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+/* 5. COLUMNA DE IMAGEN Y CURVA ASIMÉTRICA */
+.image-column {
+  overflow: hidden;
+}
+
+.split-image-curve {
+  width: 100%;
+  height: 100%;
+  /* Crea los arcos perfectos hacia la izquierda */
+  border-top-left-radius: 30% 50%;
+  border-bottom-left-radius: 30% 50%;
+  overflow: hidden;
+}
+
+.split-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
