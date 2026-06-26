@@ -3,6 +3,57 @@
   --color-primary-dark: #0f4c5c;
   --color-text: #023731;
   --color-text-muted: #5b7672;
+  --header-height: 64px;
+}
+
+/* ── Cabecera institucional reutilizable (components/Header.jsx) ── */
+.app-header {
+  width: 100%;
+  height: var(--header-height);
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+}
+
+.app-header-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  height: 100%;
+}
+
+.app-header-logo-link {
+  display: inline-flex;
+  align-items: center;
+  height: 65%;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.app-header-logo-link:hover {
+  opacity: 0.75;
+  transform: scale(1.04);
+}
+
+.app-header-logo {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    height: 52px;
+    padding: 0 0.75rem;
+  }
+
+  .app-header-logos {
+    gap: 1rem;
+  }
 }
 
 /* ── Botón reutilizable (components/Button.jsx) ───────────── */
@@ -66,7 +117,7 @@
 /* ── Pantallas de error (pages/Errors) ────────────────────── */
 .error-page {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-height));
   display: flex;
   align-items: center;
   justify-content: center;

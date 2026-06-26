@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
@@ -96,88 +97,91 @@ function FormRegistro() {
     };
 
     return (
-        <div className="register-page">
-            <div className="register-image-col">
-                <div className="register-image-curve">
-                    <img src={Imagen} alt="Campo de cultivo con aerogeneradores" className="register-bg-img" />
+        <>
+            <Header />
+            <div className="register-page">
+                <div className="register-image-col">
+                    <div className="register-image-curve">
+                        <img src={Imagen} alt="Campo de cultivo con aerogeneradores" className="register-bg-img" />
+                    </div>
+                </div>
+
+                <div className="register-form-col">
+                    <div className="register-form-container">
+                        <h1 className="register-title">¡Regístrate!</h1>
+                        <p className="register-subtitle">Ingresa los datos correspondientes</p>
+
+                        <form onSubmit={handleSubmit} noValidate>
+                            <FormInput
+                                label="Correo Electrónico"
+                                name="correo"
+                                type="email"
+                                required
+                                value={valores.correo}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errores.correo}
+                                placeholder="tu.email@empresa.com"
+                            />
+
+                            <FormInput
+                                label="Nombre completo"
+                                name="nombreCompleto"
+                                value={valores.nombreCompleto}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errores.nombreCompleto}
+                                placeholder="Lucia López Barrera"
+                            />
+
+                            <FormInput
+                                label="Nombre de usuario"
+                                name="nombreUsuario"
+                                required
+                                value={valores.nombreUsuario}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errores.nombreUsuario}
+                                placeholder="SabrinaCarpenter67"
+                            />
+
+                            <FormInput
+                                label="Contraseña"
+                                name="contrasenia"
+                                type="password"
+                                required
+                                hint="(mínimo 8 caracteres, una mayúscula y un carácter especial)"
+                                value={valores.contrasenia}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errores.contrasenia}
+                                placeholder="Ingresa tu contraseña"
+                            />
+
+                            <FormInput
+                                label="Confirma tu contraseña"
+                                name="confirmarContrasenia"
+                                type="password"
+                                required
+                                value={valores.confirmarContrasenia}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errores.confirmarContrasenia}
+                                placeholder="Ingresa tu contraseña"
+                            />
+
+                            <Button type="submit" full style={{ marginTop: 8 }}>
+                                Registrarme
+                            </Button>
+
+                            <p className="register-login-redirect">
+                                <LinkText to="/login">Ya tengo una cuenta</LinkText>
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <div className="register-form-col">
-                <div className="register-form-container">
-                    <h1 className="register-title">¡Regístrate!</h1>
-                    <p className="register-subtitle">Ingresa los datos correspondientes</p>
-
-                    <form onSubmit={handleSubmit} noValidate>
-                        <FormInput
-                            label="Correo Electrónico"
-                            name="correo"
-                            type="email"
-                            required
-                            value={valores.correo}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errores.correo}
-                            placeholder="tu.email@empresa.com"
-                        />
-
-                        <FormInput
-                            label="Nombre completo"
-                            name="nombreCompleto"
-                            value={valores.nombreCompleto}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errores.nombreCompleto}
-                            placeholder="Lucia López Barrera"
-                        />
-
-                        <FormInput
-                            label="Nombre de usuario"
-                            name="nombreUsuario"
-                            required
-                            value={valores.nombreUsuario}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errores.nombreUsuario}
-                            placeholder="SabrinaCarpenter67"
-                        />
-
-                        <FormInput
-                            label="Contraseña"
-                            name="contrasenia"
-                            type="password"
-                            required
-                            hint="(mínimo 8 caracteres, una mayúscula y un carácter especial)"
-                            value={valores.contrasenia}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errores.contrasenia}
-                            placeholder="Ingresa tu contraseña"
-                        />
-
-                        <FormInput
-                            label="Confirma tu contraseña"
-                            name="confirmarContrasenia"
-                            type="password"
-                            required
-                            value={valores.confirmarContrasenia}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errores.confirmarContrasenia}
-                            placeholder="Ingresa tu contraseña"
-                        />
-
-                        <Button type="submit" full style={{ marginTop: 8 }}>
-                            Registrarme
-                        </Button>
-
-                        <p className="register-login-redirect">
-                            <LinkText to="/login">Ya tengo una cuenta</LinkText>
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </>
     );
 }
 

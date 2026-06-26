@@ -1,6 +1,6 @@
 .login-page {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-height));
   display: flex;
   align-items: stretch;
   background-color: #f6f8f2;

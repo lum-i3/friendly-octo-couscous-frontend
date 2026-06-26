@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import Header from './Header';
 import Button from './Button';
 import '../styles/styles.css';
 
@@ -9,17 +10,20 @@ function ErrorPage({ code, image, imageAlt, heading, description, buttonText = '
     const mensajePersonalizado = location.state?.message;
 
     return (
-        <div className="error-page">
-            <div className="error-card">
-                <div className="error-icon-circle">
-                    <img src={image} alt={imageAlt} className="error-icon" />
+        <>
+            <Header />
+            <div className="error-page">
+                <div className="error-card">
+                    <div className="error-icon-circle">
+                        <img src={image} alt={imageAlt} className="error-icon" />
+                    </div>
+                    <h1 className="error-code">ERROR {code}</h1>
+                    <h2 className="error-heading">{heading}</h2>
+                    <p className="error-desc">{mensajePersonalizado || description}</p>
+                    <Button onClick={() => navigate(to)} full>{buttonText}</Button>
                 </div>
-                <h1 className="error-code">ERROR {code}</h1>
-                <h2 className="error-heading">{heading}</h2>
-                <p className="error-desc">{mensajePersonalizado || description}</p>
-                <Button onClick={() => navigate(to)} full>{buttonText}</Button>
             </div>
-        </div>
+        </>
     );
 }
 
