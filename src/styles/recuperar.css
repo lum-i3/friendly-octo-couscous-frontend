@@ -1,0 +1,88 @@
+.recuperar-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  background-color: #f6f8f2;
+  box-sizing: border-box;
+}
+
+/* ── Columna izquierda: formulario ─────────────────────────── */
+.recuperar-form-col {
+  flex: 1 1 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.recuperar-form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.recuperar-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #10475c;
+  margin: 0 0 0.25rem;
+  text-align: center;
+}
+
+.recuperar-subtitle {
+  font-size: 0.9rem;
+  color: #6b8088;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.recuperar-desc {
+  font-size: 0.85rem;
+  color: #6b8088;
+  line-height: 1.45;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+/* ── Columna derecha: imagen con curva ─────────────────────── */
+.recuperar-image-col {
+  flex: 1 1 45%;
+  overflow: hidden;
+}
+
+.recuperar-image-curve {
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 30% 50%;
+  border-bottom-left-radius: 30% 50%;
+  overflow: hidden;
+}
+
+.recuperar-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Responsive: en pantallas chicas, la imagen se oculta ──── */
+@media (max-width: 900px) {
+  .recuperar-page {
+    flex-direction: column;
+  }
+
+  .recuperar-image-col {
+    display: none;
+  }
+
+  .recuperar-form-col {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .recuperar-title {
+    font-size: 1.5rem;
+  }
+}

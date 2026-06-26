@@ -3,12 +3,8 @@ import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
 import Imagen from '../../assets/General/ImagenForm.avif';
+import { REGEX_USUARIO, REGEX_CORREO, REGEX_NOMBRE, REGEX_PASSWORD } from '../../utils/validaciones';
 import '../../styles/register.css';
-
-const REGEX_USUARIO = /^[a-zA-Z0-9._-]+$/;
-const REGEX_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const REGEX_NOMBRE = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$/;
-const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,}$/;
 
 const ESTADO_INICIAL = {
     nombreUsuario: '',
