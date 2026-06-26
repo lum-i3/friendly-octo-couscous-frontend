@@ -5,9 +5,9 @@ import '../styles/styles.css';
 
 // TODO: reemplazar estos "#" por las URLs reales de cada institución.
 const LOGOS = [
-    { src: SepLogo, alt: 'Secretaría de Educación Pública', href: '#' },
-    { src: TecNMLogo, alt: 'Tecnológico Nacional de México', href: '#' },
-    { src: CenidetLogo, alt: 'CENIDET', href: '#' },
+    { src: SepLogo, alt: 'Secretaría de Educación Pública', href: 'https://www.gob.mx/sep' },
+    { src: TecNMLogo, alt: 'Tecnológico Nacional de México', href: 'https://www.tecnm.mx/' },
+    { src: CenidetLogo, alt: 'CENIDET', href: 'https://www.cenidet.tecnm.mx/' },
 ];
 
 /**
