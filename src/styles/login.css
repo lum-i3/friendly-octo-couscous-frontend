@@ -1,0 +1,94 @@
+.login-page {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: stretch;
+  background-color: #f6f8f2;
+  box-sizing: border-box;
+}
+
+/* ── Columna izquierda: formulario ─────────────────────────── */
+.login-form-col {
+  flex: 1 1 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #10475c;
+  margin: 0 0 0.25rem;
+  text-align: center;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #6b8088;
+  margin: 0 0 1.75rem;
+  text-align: center;
+}
+
+.login-extra-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -0.4rem 0 1.5rem;
+}
+
+.login-register-redirect {
+  text-align: center;
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: #6b8088;
+}
+
+/* ── Columna derecha: imagen con curva ─────────────────────── */
+.login-image-col {
+  flex: 1 1 45%;
+  overflow: hidden;
+}
+
+.login-image-curve {
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 30% 50%;
+  border-bottom-left-radius: 30% 50%;
+  overflow: hidden;
+}
+
+.login-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Responsive: en pantallas chicas, la imagen se oculta ──── */
+@media (max-width: 900px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-image-col {
+    display: none;
+  }
+
+  .login-form-col {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .login-title {
+    font-size: 1.5rem;
+  }
+}

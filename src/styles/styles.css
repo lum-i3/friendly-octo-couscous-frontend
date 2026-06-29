@@ -1,0 +1,301 @@
+:root {
+  --color-primary: #176682;
+  --color-primary-dark: #0f4c5c;
+  --color-text: #023731;
+  --color-text-muted: #5b7672;
+  --header-height: 64px;
+}
+
+/* ── Cabecera institucional reutilizable (components/Header.jsx) ── */
+.app-header {
+  width: 100%;
+  height: var(--header-height);
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+}
+
+.app-header-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  height: 100%;
+}
+
+.app-header-logo-link {
+  display: inline-flex;
+  align-items: center;
+  height: 65%;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.app-header-logo-link:hover {
+  opacity: 0.75;
+  transform: scale(1.04);
+}
+
+.app-header-logo {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    height: 52px;
+    padding: 0 0.75rem;
+  }
+
+  .app-header-logos {
+    gap: 1rem;
+  }
+}
+
+/* ── Botón reutilizable (components/Button.jsx) ───────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--color-text);
+  color: #ffffff;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #012420;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-sm {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ── Pantallas de error (pages/Errors) ────────────────────── */
+.error-page {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f7f5;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.error-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(2, 55, 49, 0.08);
+  padding: 2.5rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: left;
+}
+
+.error-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.error-icon {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.error-code {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 0.4rem;
+  letter-spacing: 0;
+}
+
+.error-heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+}
+
+.error-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  margin: 0 0 1.5rem;
+}
+
+/* ── Campo de formulario reutilizable (components/FormInput.jsx) ── */
+.field {
+  margin-bottom: 1.1rem;
+  text-align: left;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.field-required {
+  color: #c0392b;
+}
+
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.field-error-text {
+  font-size: 0.78rem;
+  color: #c0392b;
+  margin: 0 0 0.35rem;
+}
+
+.field-input-wrapper {
+  position: relative;
+}
+
+.field-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  border: 1px solid #d6ded9;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field-input::placeholder {
+  color: #a7b3ae;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(23, 102, 130, 0.15);
+}
+
+.field-input.has-error {
+  border-color: #c0392b;
+}
+
+.field-input.has-error:focus {
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+.field-input-password {
+  padding-right: 2.6rem;
+}
+
+.field-toggle-visibility {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.field-toggle-visibility img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── Link de texto reutilizable (components/LinkText.jsx) ──── */
+.link-text {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link-text:hover {
+  text-decoration: underline;
+}
+
+/* ── Checkbox reutilizable (components/Checkbox.jsx) ───────── */
+.checkbox-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-field input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
