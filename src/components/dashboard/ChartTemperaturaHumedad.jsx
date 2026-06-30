@@ -31,13 +31,13 @@ function Gauge({ valor, maximo, color, etiqueta, unidad }) {
         }],
     };
 
+    const display = valor != null ? `${Number(valor).toFixed(1)}${unidad}` : '--';
+
     return (
         <div className="dashboard-gauge">
             <div className="dashboard-gauge__canvas-wrapper">
                 <Doughnut data={data} options={BASE_OPTIONS} />
-                <span className="dashboard-gauge__value">
-                    {valor != null ? `${valor}${unidad}` : '--'}
-                </span>
+                <span className="dashboard-gauge__value">{display}</span>
             </div>
             <span className="dashboard-gauge__label">{etiqueta}</span>
         </div>

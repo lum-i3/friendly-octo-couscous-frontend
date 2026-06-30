@@ -43,9 +43,8 @@
   max-width: 420px;
 }
 
-/* Reduce el espacio entre campos para evitar scroll innecesario */
 .register-form-col .field {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .register-title {
@@ -59,7 +58,7 @@
 .register-subtitle {
   font-size: 0.9rem;
   color: #6b8088;
-  margin: 0 0 1.1rem;
+  margin: 0 0 0.6rem;
   text-align: center;
 }
 

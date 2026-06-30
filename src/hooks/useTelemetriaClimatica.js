@@ -3,16 +3,6 @@ import { useState, useEffect } from 'react';
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 const PAGE_SIZE = 12;
 
-/**
- * Obtiene datos de telemetría climática paginados.
- * GET /api/telemetria/climatica?page={pagina-1}&size=12
- *
- * Retorna:
- *   lecturas     → ClimateReadingDTO[]
- *   totalPaginas → number
- *   cargando     → boolean
- *   error        → string | null
- */
 function useTelemetriaClimatica(pagina) {
     const [lecturas, setLecturas] = useState([]);
     const [totalPaginas, setTotalPaginas] = useState(0);
@@ -25,7 +15,7 @@ function useTelemetriaClimatica(pagina) {
         setCargando(true);
         setError(null);
 
-        fetch(`${BASE_URL}/api/telemetria/climatica?page=${pagina - 1}&size=${PAGE_SIZE}`)
+        fetch(`${BASE_URL}/api/telemetria/publica/tabla?page=${pagina - 1}&size=${PAGE_SIZE}`)
             .then((res) => {
                 if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
                 return res.json();
