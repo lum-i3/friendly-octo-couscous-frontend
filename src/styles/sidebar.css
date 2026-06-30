@@ -196,7 +196,7 @@
   align-items: center;
   gap: 10px;
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 10px 14px;
   flex-shrink: 0;
 }
@@ -206,7 +206,7 @@
   background-color: #065574;
   color: #D8E7E9;
   padding: 8px 22px;
-  border-radius: 25px;
+  border-radius: 25px 8px 8px 8px;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   font-weight: 600;

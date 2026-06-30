@@ -5,31 +5,12 @@ import TableSectionTitle from '../../components/tabla/TableSectionTitle';
 import UltimosDataTable from '../../components/tabla/UltimosDataTable';
 import TablePagination from '../../components/tabla/TablePagination';
 import { VISITANTE_ITEMS } from '../../utils/sidebarItems';
+import useTelemetriaClimatica from '../../hooks/useTelemetriaClimatica';
 import '../../styles/dashboard.css';
-
-const PAGE_SIZE = 12;
-
-// Datos mock — reemplazar con llamada a:
-// GET /api/telemetria/climatica?inicio=...&fin=...&page={page-1}&size=12
-// response.data  →  { contenido, paginaActual, totalPaginas, totalElementos, esPrimera, esUltima }
-const MOCK_LECTURAS = Array.from({ length: PAGE_SIZE }, (_, i) => ({
-    idLectura: i + 1,
-    fechaLectura: '2026-05-21T11:34:00',
-    temperatura: 28,
-    viento: 2,
-    radiacion: 8,
-    humedad: 41.8,
-}));
-
-const MOCK_TOTAL_PAGINAS = 10;
 
 function TablaDatosUsuario() {
     const [currentPage, setCurrentPage] = useState(1);
-
-    // Al conectar el backend, aquí irá el fetch que depende de currentPage:
-    // useEffect(() => { fetchLecturas(currentPage - 1, PAGE_SIZE); }, [currentPage]);
-    const lecturas = MOCK_LECTURAS;
-    const totalPaginas = MOCK_TOTAL_PAGINAS;
+    const { lecturas, totalPaginas, cargando, error } = useTelemetriaClimatica(currentPage);
 
     return (
         <div className="page-with-header">
@@ -42,13 +23,31 @@ function TablaDatosUsuario() {
                 >
                     <TableSectionTitle />
 
-                    <UltimosDataTable lecturas={lecturas} />
+                    {cargando && (
+                        <p style={{ color: 'var(--color-text-muted)', fontFamily: 'Inter, system-ui, sans-serif', fontSize: '0.9rem' }}>
+                            Cargando datos...
+                        </p>
+                    )}
 
-                    <TablePagination
-                        currentPage={currentPage}
-                        totalPages={totalPaginas}
-                        onPageChange={setCurrentPage}
-                    />
+                    {!cargando && error && (
+                        <div className="dashboard-error">
+                            <span>No se pudieron cargar los datos.</span>
+                            <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{error}</span>
+                        </div>
+                    )}
+
+                    {!cargando && !error && (
+                        <>
+                            <UltimosDataTable lecturas={lecturas} />
+                            {totalPaginas > 1 && (
+                                <TablePagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPaginas}
+                                    onPageChange={setCurrentPage}
+                                />
+                            )}
+                        </>
+                    )}
                 </SidebarLayout>
             </div>
         </div>

@@ -46,7 +46,6 @@ function DashboardVisitante() {
                 <SidebarLayout
                     navItems={VISITANTE_ITEMS}
                     defaultActiveKey="graficas"
-                    titulo="Dashboard"
                 >
                     {/* Indicador de estado de sincronización */}
                     {!cargando && (

@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import Imagen from '../../assets/General/ImagenLogin.avif';
 import { REGEX_CORREO, REGEX_PASSWORD, REGEX_CODIGO_RECUPERACION } from '../../utils/validaciones';
+import { forgotPassword, resetPassword } from '../../services/authService';
 import '../../styles/recuperar.css';
 
 const PASOS = {
@@ -50,16 +53,17 @@ function validarCampo(name, valores) {
 }
 
 function RecuperarContrasenia() {
+    const navigate = useNavigate();
     const [paso, setPaso] = useState(PASOS.CORREO);
     const [valores, setValores] = useState(ESTADO_INICIAL);
     const [errores, setErrores] = useState({});
+    const [cargando, setCargando] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const nuevosValores = { ...valores, [name]: value };
         setValores(nuevosValores);
 
-        // Si el campo ya tenía error, lo revalidamos al teclear para feedback inmediato.
         setErrores((prev) => {
             const next = { ...prev };
             if (prev[name]) next[name] = validarCampo(name, nuevosValores);
@@ -85,32 +89,63 @@ function RecuperarContrasenia() {
         return Object.keys(nuevosErrores).length === 0;
     };
 
-    const handleSolicitarCodigo = (e) => {
+    const handleSolicitarCodigo = async (e) => {
         e.preventDefault();
-        if (!validarPaso(['correo'])) return;
+        if (cargando || !validarPaso(['correo'])) return;
 
-        // TODO: conectar con POST /api/auth/forgot-password cuando se integre el backend.
-        console.log('Solicitar código de recuperación para:', valores.correo);
-        setPaso(PASOS.CODIGO);
+        setCargando(true);
+        try {
+            await forgotPassword(valores.correo);
+            await Swal.fire({
+                icon: 'success',
+                title: 'Código enviado',
+                text: 'Revisa tu correo electrónico e ingresa el código de recuperación.',
+                confirmButtonColor: '#176682',
+            });
+            setPaso(PASOS.CODIGO);
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'No se pudo enviar el código',
+                text: err.message,
+                confirmButtonColor: '#176682',
+            });
+        } finally {
+            setCargando(false);
+        }
     };
 
     const handleVerificarCodigo = (e) => {
         e.preventDefault();
         if (!validarPaso(['codigo'])) return;
-
-        // El backend valida el código junto con la nueva contraseña en POST /api/auth/reset-password
-        // (no existe un endpoint separado para "solo verificar"), así que aquí únicamente
-        // se valida el formato antes de avanzar; el código se reenviará en el último paso.
+        // El backend valida el código junto con la contraseña en POST /api/auth/reset-password
         setPaso(PASOS.NUEVA_CONTRASENIA);
     };
 
-    const handleCrearNuevaContrasenia = (e) => {
+    const handleCrearNuevaContrasenia = async (e) => {
         e.preventDefault();
-        if (!validarPaso(['nuevaContrasenia', 'confirmarContrasenia'])) return;
+        if (cargando || !validarPaso(['nuevaContrasenia', 'confirmarContrasenia'])) return;
 
-        // TODO: conectar con POST /api/auth/reset-password cuando se integre el backend.
-        // Body esperado: { correo, codigo, nuevaContrasenia, confirmarContrasenia }
-        console.log('Restablecer contraseña:', valores);
+        setCargando(true);
+        try {
+            await resetPassword(valores);
+            await Swal.fire({
+                icon: 'success',
+                title: '¡Contraseña actualizada!',
+                text: 'Tu contraseña ha sido restablecida. Ahora puedes iniciar sesión.',
+                confirmButtonColor: '#176682',
+            });
+            navigate('/login');
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al restablecer contraseña',
+                text: err.message,
+                confirmButtonColor: '#176682',
+            });
+        } finally {
+            setCargando(false);
+        }
     };
 
     return (
@@ -125,7 +160,7 @@ function RecuperarContrasenia() {
                                 <p className="recuperar-subtitle">Ingresa tu correo electrónico</p>
 
                                 <FormInput
-                                    label="Correo Electrónico"
+                                    label="Correo electrónico"
                                     name="correo"
                                     type="email"
                                     required
@@ -133,11 +168,11 @@ function RecuperarContrasenia() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={errores.correo}
-                                    placeholder="tu.email@empresa.com"
+                                    placeholder="tu.correo@ejemplo.com"
                                 />
 
-                                <Button type="submit" full style={{ marginTop: 8 }}>
-                                    Enviar código de recuperación
+                                <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                    {cargando ? 'Enviando...' : 'Enviar código de recuperación'}
                                 </Button>
                             </form>
                         )}
@@ -158,7 +193,7 @@ function RecuperarContrasenia() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={errores.codigo}
-                                    placeholder="123456"
+                                    placeholder="Ej. 123456"
                                 />
 
                                 <Button type="submit" full style={{ marginTop: 8 }}>
@@ -177,7 +212,7 @@ function RecuperarContrasenia() {
                                     name="nuevaContrasenia"
                                     type="password"
                                     required
-                                    hint="(mínimo 8 caracteres, una mayúscula y un carácter especial)"
+                                    hint="Mín. 8 caracteres, mayúscula y símbolo"
                                     value={valores.nuevaContrasenia}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -194,11 +229,11 @@ function RecuperarContrasenia() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={errores.confirmarContrasenia}
-                                    placeholder="Ingresa tu nueva contraseña"
+                                    placeholder="Repite tu nueva contraseña"
                                 />
 
-                                <Button type="submit" full style={{ marginTop: 8 }}>
-                                    Crear nueva contraseña
+                                <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                    {cargando ? 'Guardando...' : 'Crear nueva contraseña'}
                                 </Button>
                             </form>
                         )}

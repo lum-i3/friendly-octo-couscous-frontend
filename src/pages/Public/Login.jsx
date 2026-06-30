@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
 import Checkbox from '../../components/Checkbox';
 import Imagen from '../../assets/General/ImagenLogin.avif';
+import { login } from '../../services/authService';
 import '../../styles/login.css';
 
 const ESTADO_INICIAL = {
@@ -14,7 +17,9 @@ const ESTADO_INICIAL = {
 };
 
 function Login() {
+    const navigate = useNavigate();
     const [valores, setValores] = useState(ESTADO_INICIAL);
+    const [cargando, setCargando] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,10 +30,25 @@ function Login() {
         setValores((prev) => ({ ...prev, recordarme: e.target.checked }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO: conectar con POST /api/auth/login cuando se integre el backend.
-        console.log('Intento de inicio de sesión:', valores);
+        if (cargando) return;
+
+        setCargando(true);
+        try {
+            const data = await login(valores.correo, valores.contrasenia);
+            if (data.token) localStorage.setItem('jwt', data.token);
+            navigate('/');
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al iniciar sesión',
+                text: err.message,
+                confirmButtonColor: '#176682',
+            });
+        } finally {
+            setCargando(false);
+        }
     };
 
     return (
@@ -42,12 +62,12 @@ function Login() {
 
                         <form onSubmit={handleSubmit} noValidate>
                             <FormInput
-                                label="Correo Electrónico"
+                                label="Correo electrónico"
                                 name="correo"
                                 type="email"
                                 value={valores.correo}
                                 onChange={handleChange}
-                                placeholder="tu.email@empresa.com"
+                                placeholder="tu.correo@ejemplo.com"
                             />
 
                             <FormInput
@@ -69,8 +89,8 @@ function Login() {
                                 <LinkText to="/recuperar-contrasenia">¿Olvidaste tu contraseña?</LinkText>
                             </div>
 
-                            <Button type="submit" full>
-                                Iniciar sesión
+                            <Button type="submit" full disabled={cargando}>
+                                {cargando ? 'Iniciando sesión...' : 'Iniciar sesión'}
                             </Button>
 
                             <p className="login-register-redirect">

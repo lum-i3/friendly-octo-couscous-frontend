@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
 import Imagen from '../../assets/General/ImagenForm.avif';
 import { REGEX_USUARIO, REGEX_CORREO, REGEX_NOMBRE, REGEX_PASSWORD } from '../../utils/validaciones';
+import { registrar } from '../../services/authService';
 import '../../styles/register.css';
 
 const ESTADO_INICIAL = {
@@ -32,7 +35,7 @@ function validarCampo(name, valores) {
             return '';
 
         case 'nombreCompleto':
-            if (!valor.trim()) return ''; // opcional
+            if (!valor.trim()) return '';
             if (valor.length > 90) return 'No puede superar los 90 caracteres.';
             if (!REGEX_NOMBRE.test(valor)) return 'Solo letras y un espacio entre palabras.';
             return '';
@@ -54,16 +57,16 @@ function validarCampo(name, valores) {
 }
 
 function FormRegistro() {
+    const navigate = useNavigate();
     const [valores, setValores] = useState(ESTADO_INICIAL);
     const [errores, setErrores] = useState({});
+    const [cargando, setCargando] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const nuevosValores = { ...valores, [name]: value };
         setValores(nuevosValores);
 
-        // Si el campo ya tenía error, lo revalidamos al teclear para feedback inmediato.
-        // La confirmación también se revisa de nuevo si cambia la contraseña.
         setErrores((prev) => {
             const next = { ...prev };
             if (prev[name]) next[name] = validarCampo(name, nuevosValores);
@@ -79,8 +82,9 @@ function FormRegistro() {
         setErrores((prev) => ({ ...prev, [name]: validarCampo(name, valores) }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (cargando) return;
 
         const nuevosErrores = {};
         Object.keys(valores).forEach((name) => {
@@ -88,12 +92,28 @@ function FormRegistro() {
             if (mensaje) nuevosErrores[name] = mensaje;
         });
         setErrores(nuevosErrores);
-
         if (Object.keys(nuevosErrores).length > 0) return;
 
-        // TODO: conectar con POST /api/auth/registrar cuando se integre el backend.
-        // Por ahora el formulario solo valida en el cliente.
-        console.log('Formulario válido, listo para enviar:', valores);
+        setCargando(true);
+        try {
+            await registrar(valores);
+            await Swal.fire({
+                icon: 'success',
+                title: '¡Registro exitoso!',
+                text: 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.',
+                confirmButtonColor: '#176682',
+            });
+            navigate('/login');
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al registrarse',
+                text: err.message,
+                confirmButtonColor: '#176682',
+            });
+        } finally {
+            setCargando(false);
+        }
     };
 
     return (
@@ -113,7 +133,7 @@ function FormRegistro() {
 
                         <form onSubmit={handleSubmit} noValidate>
                             <FormInput
-                                label="Correo Electrónico"
+                                label="Correo electrónico"
                                 name="correo"
                                 type="email"
                                 required
@@ -121,7 +141,7 @@ function FormRegistro() {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={errores.correo}
-                                placeholder="tu.email@empresa.com"
+                                placeholder="tu.correo@ejemplo.com"
                             />
 
                             <FormInput
@@ -131,7 +151,7 @@ function FormRegistro() {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={errores.nombreCompleto}
-                                placeholder="Lucia López Barrera"
+                                placeholder="Ingresa tu nombre completo"
                             />
 
                             <FormInput
@@ -142,7 +162,7 @@ function FormRegistro() {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={errores.nombreUsuario}
-                                placeholder="SabrinaCarpenter67"
+                                placeholder="Ingresa tu nombre de usuario"
                             />
 
                             <FormInput
@@ -150,7 +170,7 @@ function FormRegistro() {
                                 name="contrasenia"
                                 type="password"
                                 required
-                                hint="(mínimo 8 caracteres, una mayúscula y un carácter especial)"
+                                hint="Mín. 8 caracteres, mayúscula y símbolo"
                                 value={valores.contrasenia}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -167,11 +187,11 @@ function FormRegistro() {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={errores.confirmarContrasenia}
-                                placeholder="Ingresa tu contraseña"
+                                placeholder="Repite tu contraseña"
                             />
 
-                            <Button type="submit" full style={{ marginTop: 8 }}>
-                                Registrarme
+                            <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                {cargando ? 'Registrando...' : 'Registrarme'}
                             </Button>
 
                             <p className="register-login-redirect">
