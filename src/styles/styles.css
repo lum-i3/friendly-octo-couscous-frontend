@@ -284,6 +284,28 @@
   text-decoration: underline;
 }
 
+/* ── Barra de navegación en pantallas de autenticación ─────── */
+.auth-page-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0.75rem 1.25rem 0;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Centra el formulario y permite scroll interno si el contenido desborda */
+.auth-form-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem 1.5rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
 /* ── Checkbox reutilizable (components/Checkbox.jsx) ───────── */
 .checkbox-field {
   display: inline-flex;

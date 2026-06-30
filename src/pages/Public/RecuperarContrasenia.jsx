@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
+import NavBackBtn from '../../components/NavBackBtn';
+import NavHomeBtn from '../../components/NavHomeBtn';
 import Imagen from '../../assets/General/ImagenLogin.avif';
 import { REGEX_CORREO, REGEX_PASSWORD, REGEX_CODIGO_RECUPERACION } from '../../utils/validaciones';
 import { forgotPassword, resetPassword } from '../../services/authService';
@@ -118,7 +120,6 @@ function RecuperarContrasenia() {
     const handleVerificarCodigo = (e) => {
         e.preventDefault();
         if (!validarPaso(['codigo'])) return;
-        // El backend valida el código junto con la contraseña en POST /api/auth/reset-password
         setPaso(PASOS.NUEVA_CONTRASENIA);
     };
 
@@ -153,90 +154,96 @@ function RecuperarContrasenia() {
             <Header />
             <div className="recuperar-page">
                 <div className="recuperar-form-col">
-                    <div className="recuperar-form-container">
-                        {paso === PASOS.CORREO && (
-                            <form onSubmit={handleSolicitarCodigo} noValidate>
-                                <h1 className="recuperar-title">Recuperación de contraseña</h1>
-                                <p className="recuperar-subtitle">Ingresa tu correo electrónico</p>
+                    <div className="auth-page-nav">
+                        <NavBackBtn onClick={() => navigate(-1)} />
+                        <NavHomeBtn onClick={() => navigate('/')} />
+                    </div>
+                    <div className="auth-form-center">
+                        <div className="recuperar-form-container">
+                            {paso === PASOS.CORREO && (
+                                <form onSubmit={handleSolicitarCodigo} noValidate>
+                                    <h1 className="recuperar-title">Recuperación de contraseña</h1>
+                                    <p className="recuperar-subtitle">Ingresa tu correo electrónico</p>
 
-                                <FormInput
-                                    label="Correo electrónico"
-                                    name="correo"
-                                    type="email"
-                                    required
-                                    value={valores.correo}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={errores.correo}
-                                    placeholder="tu.correo@ejemplo.com"
-                                />
+                                    <FormInput
+                                        label="Correo electrónico"
+                                        name="correo"
+                                        type="email"
+                                        required
+                                        value={valores.correo}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={errores.correo}
+                                        placeholder="tu.correo@ejemplo.com"
+                                    />
 
-                                <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
-                                    {cargando ? 'Enviando...' : 'Enviar código de recuperación'}
-                                </Button>
-                            </form>
-                        )}
+                                    <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                        {cargando ? 'Enviando...' : 'Enviar código de recuperación'}
+                                    </Button>
+                                </form>
+                            )}
 
-                        {paso === PASOS.CODIGO && (
-                            <form onSubmit={handleVerificarCodigo} noValidate>
-                                <h1 className="recuperar-title">Token de recuperación</h1>
-                                <p className="recuperar-subtitle">El código es de un solo uso</p>
-                                <p className="recuperar-desc">
-                                    Ingresa el código que enviamos a tu correo. Si no lo has recibido, puedes solicitar uno nuevo en 15 minutos.
-                                </p>
+                            {paso === PASOS.CODIGO && (
+                                <form onSubmit={handleVerificarCodigo} noValidate>
+                                    <h1 className="recuperar-title">Token de recuperación</h1>
+                                    <p className="recuperar-subtitle">El código es de un solo uso</p>
+                                    <p className="recuperar-desc">
+                                        Ingresa el código que enviamos a tu correo. Si no lo has recibido, puedes solicitar uno nuevo en 15 minutos.
+                                    </p>
 
-                                <FormInput
-                                    label="Código de verificación"
-                                    name="codigo"
-                                    required
-                                    value={valores.codigo}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={errores.codigo}
-                                    placeholder="Ej. 123456"
-                                />
+                                    <FormInput
+                                        label="Código de verificación"
+                                        name="codigo"
+                                        required
+                                        value={valores.codigo}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={errores.codigo}
+                                        placeholder="Ej. 123456"
+                                    />
 
-                                <Button type="submit" full style={{ marginTop: 8 }}>
-                                    Verificar código
-                                </Button>
-                            </form>
-                        )}
+                                    <Button type="submit" full style={{ marginTop: 8 }}>
+                                        Verificar código
+                                    </Button>
+                                </form>
+                            )}
 
-                        {paso === PASOS.NUEVA_CONTRASENIA && (
-                            <form onSubmit={handleCrearNuevaContrasenia} noValidate>
-                                <h1 className="recuperar-title">Nueva contraseña</h1>
-                                <p className="recuperar-subtitle">Crea una nueva contraseña</p>
+                            {paso === PASOS.NUEVA_CONTRASENIA && (
+                                <form onSubmit={handleCrearNuevaContrasenia} noValidate>
+                                    <h1 className="recuperar-title">Nueva contraseña</h1>
+                                    <p className="recuperar-subtitle">Crea una nueva contraseña</p>
 
-                                <FormInput
-                                    label="Contraseña"
-                                    name="nuevaContrasenia"
-                                    type="password"
-                                    required
-                                    hint="Mín. 8 caracteres, mayúscula y símbolo"
-                                    value={valores.nuevaContrasenia}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={errores.nuevaContrasenia}
-                                    placeholder="Ingresa tu nueva contraseña"
-                                />
+                                    <FormInput
+                                        label="Contraseña"
+                                        name="nuevaContrasenia"
+                                        type="password"
+                                        required
+                                        hint="Mín. 8 caracteres, mayúscula y símbolo"
+                                        value={valores.nuevaContrasenia}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={errores.nuevaContrasenia}
+                                        placeholder="Ingresa tu nueva contraseña"
+                                    />
 
-                                <FormInput
-                                    label="Confirma tu contraseña"
-                                    name="confirmarContrasenia"
-                                    type="password"
-                                    required
-                                    value={valores.confirmarContrasenia}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={errores.confirmarContrasenia}
-                                    placeholder="Repite tu nueva contraseña"
-                                />
+                                    <FormInput
+                                        label="Confirma tu contraseña"
+                                        name="confirmarContrasenia"
+                                        type="password"
+                                        required
+                                        value={valores.confirmarContrasenia}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={errores.confirmarContrasenia}
+                                        placeholder="Repite tu nueva contraseña"
+                                    />
 
-                                <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
-                                    {cargando ? 'Guardando...' : 'Crear nueva contraseña'}
-                                </Button>
-                            </form>
-                        )}
+                                    <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                        {cargando ? 'Guardando...' : 'Crear nueva contraseña'}
+                                    </Button>
+                                </form>
+                            )}
+                        </div>
                     </div>
                 </div>
 

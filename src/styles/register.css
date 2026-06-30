@@ -1,6 +1,7 @@
 .register-page {
   width: 100%;
-  min-height: calc(100vh - var(--header-height));
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
   display: flex;
   align-items: stretch;
   background-color: #f6f8f2;
@@ -32,10 +33,9 @@
 .register-form-col {
   flex: 1 1 55%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2.5rem 2rem;
+  flex-direction: column;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .register-form-container {
@@ -43,24 +43,29 @@
   max-width: 420px;
 }
 
+/* Reduce el espacio entre campos para evitar scroll innecesario */
+.register-form-col .field {
+  margin-bottom: 0.75rem;
+}
+
 .register-title {
   font-size: 1.9rem;
   font-weight: 800;
   color: #10475c;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   text-align: center;
 }
 
 .register-subtitle {
   font-size: 0.9rem;
   color: #6b8088;
-  margin: 0 0 1.75rem;
+  margin: 0 0 1.1rem;
   text-align: center;
 }
 
 .register-login-redirect {
   text-align: center;
-  margin-top: 1.1rem;
+  margin-top: 0.9rem;
   font-size: 0.9rem;
 }
 
@@ -68,14 +73,13 @@
 @media (max-width: 900px) {
   .register-page {
     flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - var(--header-height));
+    overflow: visible;
   }
 
   .register-image-col {
     display: none;
-  }
-
-  .register-form-col {
-    padding: 2rem 1.25rem;
   }
 }
 

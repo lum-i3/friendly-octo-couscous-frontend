@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
 /**
  * Obtiene el resumen de telemetría del endpoint público.

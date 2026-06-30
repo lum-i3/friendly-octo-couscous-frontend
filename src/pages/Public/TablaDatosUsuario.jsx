@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import TableSectionTitle from '../../components/tabla/TableSectionTitle';
@@ -9,6 +10,7 @@ import useTelemetriaClimatica from '../../hooks/useTelemetriaClimatica';
 import '../../styles/dashboard.css';
 
 function TablaDatosUsuario() {
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const { lecturas, totalPaginas, cargando, error } = useTelemetriaClimatica(currentPage);
 
@@ -20,6 +22,8 @@ function TablaDatosUsuario() {
                     navItems={VISITANTE_ITEMS}
                     defaultActiveKey="tabla"
                     titulo="Tablas de datos"
+                    onBack={() => navigate(-1)}
+                    onHome={() => navigate('/')}
                 >
                     <TableSectionTitle />
 

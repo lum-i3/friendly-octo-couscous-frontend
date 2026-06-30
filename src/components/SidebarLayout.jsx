@@ -20,11 +20,9 @@ function SidebarLayout({
     const [isOpen, setIsOpen] = useState(true);
     const location = useLocation();
 
-    // Detecta el ítem activo por URL; si ninguno coincide usa defaultActiveKey
+    // Detecta el ítem activo únicamente por URL; sin coincidencia → nada activo
     const activeKey =
         navItems.find(item => item.to && location.pathname === item.to)?.key
-        ?? defaultActiveKey
-        ?? navItems[0]?.key
         ?? null;
 
     return (

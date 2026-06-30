@@ -5,6 +5,8 @@ import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
+import NavBackBtn from '../../components/NavBackBtn';
+import NavHomeBtn from '../../components/NavHomeBtn';
 import Imagen from '../../assets/General/ImagenForm.avif';
 import { REGEX_USUARIO, REGEX_CORREO, REGEX_NOMBRE, REGEX_PASSWORD } from '../../utils/validaciones';
 import { registrar } from '../../services/authService';
@@ -127,77 +129,83 @@ function FormRegistro() {
                 </div>
 
                 <div className="register-form-col">
-                    <div className="register-form-container">
-                        <h1 className="register-title">¡Regístrate!</h1>
-                        <p className="register-subtitle">Ingresa los datos correspondientes</p>
+                    <div className="auth-page-nav">
+                        <NavBackBtn onClick={() => navigate(-1)} />
+                        <NavHomeBtn onClick={() => navigate('/')} />
+                    </div>
+                    <div className="auth-form-center">
+                        <div className="register-form-container">
+                            <h1 className="register-title">¡Regístrate!</h1>
+                            <p className="register-subtitle">Ingresa los datos correspondientes</p>
 
-                        <form onSubmit={handleSubmit} noValidate>
-                            <FormInput
-                                label="Correo electrónico"
-                                name="correo"
-                                type="email"
-                                required
-                                value={valores.correo}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errores.correo}
-                                placeholder="tu.correo@ejemplo.com"
-                            />
+                            <form onSubmit={handleSubmit} noValidate>
+                                <FormInput
+                                    label="Correo electrónico"
+                                    name="correo"
+                                    type="email"
+                                    required
+                                    value={valores.correo}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.correo}
+                                    placeholder="tu.correo@ejemplo.com"
+                                />
 
-                            <FormInput
-                                label="Nombre completo"
-                                name="nombreCompleto"
-                                value={valores.nombreCompleto}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errores.nombreCompleto}
-                                placeholder="Ingresa tu nombre completo"
-                            />
+                                <FormInput
+                                    label="Nombre completo"
+                                    name="nombreCompleto"
+                                    value={valores.nombreCompleto}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.nombreCompleto}
+                                    placeholder="Ingresa tu nombre completo"
+                                />
 
-                            <FormInput
-                                label="Nombre de usuario"
-                                name="nombreUsuario"
-                                required
-                                value={valores.nombreUsuario}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errores.nombreUsuario}
-                                placeholder="Ingresa tu nombre de usuario"
-                            />
+                                <FormInput
+                                    label="Nombre de usuario"
+                                    name="nombreUsuario"
+                                    required
+                                    value={valores.nombreUsuario}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.nombreUsuario}
+                                    placeholder="Ingresa tu nombre de usuario"
+                                />
 
-                            <FormInput
-                                label="Contraseña"
-                                name="contrasenia"
-                                type="password"
-                                required
-                                hint="Mín. 8 caracteres, mayúscula y símbolo"
-                                value={valores.contrasenia}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errores.contrasenia}
-                                placeholder="Ingresa tu contraseña"
-                            />
+                                <FormInput
+                                    label="Contraseña"
+                                    name="contrasenia"
+                                    type="password"
+                                    required
+                                    hint="Mín. 8 caracteres, mayúscula y símbolo"
+                                    value={valores.contrasenia}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.contrasenia}
+                                    placeholder="Ingresa tu contraseña"
+                                />
 
-                            <FormInput
-                                label="Confirma tu contraseña"
-                                name="confirmarContrasenia"
-                                type="password"
-                                required
-                                value={valores.confirmarContrasenia}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errores.confirmarContrasenia}
-                                placeholder="Repite tu contraseña"
-                            />
+                                <FormInput
+                                    label="Confirma tu contraseña"
+                                    name="confirmarContrasenia"
+                                    type="password"
+                                    required
+                                    value={valores.confirmarContrasenia}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.confirmarContrasenia}
+                                    placeholder="Repite tu contraseña"
+                                />
 
-                            <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
-                                {cargando ? 'Registrando...' : 'Registrarme'}
-                            </Button>
+                                <Button type="submit" full style={{ marginTop: 6 }} disabled={cargando}>
+                                    {cargando ? 'Registrando...' : 'Registrarme'}
+                                </Button>
 
-                            <p className="register-login-redirect">
-                                <LinkText to="/login">Ya tengo una cuenta</LinkText>
-                            </p>
-                        </form>
+                                <p className="register-login-redirect">
+                                    <LinkText to="/login">Ya tengo una cuenta</LinkText>
+                                </p>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
