@@ -1,10 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import '../styles/sidebar.css';
 
-/**
- * Botón de navegación individual de la sidebar.
- * `icon` acepta un <img> o <svg> según corresponda al ítem.
- */
-function SidebarNavItem({ icon, label, isActive, isOpen, onClick }) {
+function SidebarNavItem({ icon, label, isActive, isOpen, to, onClick }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (to) navigate(to);
+        if (onClick) onClick();
+    };
+
     return (
         <button
             className={[
@@ -12,7 +16,7 @@ function SidebarNavItem({ icon, label, isActive, isOpen, onClick }) {
                 isActive ? 'sidebar-nav-item--active' : '',
                 isOpen ? 'sidebar-nav-item--open' : 'sidebar-nav-item--closed',
             ].join(' ')}
-            onClick={onClick}
+            onClick={handleClick}
             title={!isOpen ? label : undefined}
             aria-current={isActive ? 'page' : undefined}
         >

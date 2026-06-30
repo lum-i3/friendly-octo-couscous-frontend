@@ -1,14 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import '../styles/sidebar.css';
 
-/**
- * Botón "Iniciar sesión" de la sidebar, visible únicamente para visitantes.
- * Cuando la sidebar está cerrada el texto desaparece y queda un bloque verde compacto.
- */
 function SidebarLoginBtn({ onClick, isOpen }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (onClick) onClick();
+        else navigate('/login');
+    };
+
     return (
         <button
             className={`sidebar-login-btn ${isOpen ? 'sidebar-login-btn--open' : 'sidebar-login-btn--closed'}`}
-            onClick={onClick}
+            onClick={handleClick}
             title={!isOpen ? 'Iniciar sesión' : undefined}
             aria-label="Iniciar sesión"
         >

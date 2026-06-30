@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import MenuIcon from '../assets/Icons/MenuIcon.png';
 import SidebarPerfil from './SidebarPerfil';
 import SidebarLoginBtn from './SidebarLoginBtn';
@@ -17,7 +18,14 @@ function SidebarLayout({
     onLogin,
 }) {
     const [isOpen, setIsOpen] = useState(true);
-    const [activeKey, setActiveKey] = useState(defaultActiveKey ?? navItems[0]?.key ?? null);
+    const location = useLocation();
+
+    // Detecta el ítem activo por URL; si ninguno coincide usa defaultActiveKey
+    const activeKey =
+        navItems.find(item => item.to && location.pathname === item.to)?.key
+        ?? defaultActiveKey
+        ?? navItems[0]?.key
+        ?? null;
 
     return (
         <div className="sidebar-viewport">
@@ -51,7 +59,7 @@ function SidebarLayout({
                             label={item.label}
                             isActive={activeKey === item.key}
                             isOpen={isOpen}
-                            onClick={() => setActiveKey(item.key)}
+                            to={item.to}
                         />
                     ))}
                 </nav>

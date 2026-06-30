@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import TableSectionTitle from '../../components/tabla/TableSectionTitle';
 import UltimosDataTable from '../../components/tabla/UltimosDataTable';
 import TablePagination from '../../components/tabla/TablePagination';
 import { VISITANTE_ITEMS } from '../../utils/sidebarItems';
+import '../../styles/dashboard.css';
 
 const PAGE_SIZE = 12;
 
@@ -30,21 +32,26 @@ function TablaDatosUsuario() {
     const totalPaginas = MOCK_TOTAL_PAGINAS;
 
     return (
-        <SidebarLayout
-            navItems={VISITANTE_ITEMS}
-            defaultActiveKey="tabla"
-            titulo="Tablas de datos"
-        >
-            <TableSectionTitle />
+        <div className="page-with-header">
+            <Header />
+            <div className="page-with-header__body">
+                <SidebarLayout
+                    navItems={VISITANTE_ITEMS}
+                    defaultActiveKey="tabla"
+                    titulo="Tablas de datos"
+                >
+                    <TableSectionTitle />
 
-            <UltimosDataTable lecturas={lecturas} />
+                    <UltimosDataTable lecturas={lecturas} />
 
-            <TablePagination
-                currentPage={currentPage}
-                totalPages={totalPaginas}
-                onPageChange={setCurrentPage}
-            />
-        </SidebarLayout>
+                    <TablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPaginas}
+                        onPageChange={setCurrentPage}
+                    />
+                </SidebarLayout>
+            </div>
+        </div>
     );
 }
 
