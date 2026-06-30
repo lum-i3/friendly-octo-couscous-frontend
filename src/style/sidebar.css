@@ -194,8 +194,8 @@ html, body, #root {
 
 .content-body {
   flex: 1;
-  background: #f5f5f0;
-  border-radius: 12px;
-  padding: 24px;
+  background: #f4f6f4; /* Tono grisáceo claro de fondo según tu imagen */
+  border-bottom-left-radius: 40px; /* Curvatura amplia de la base izquierda */
+  padding: 32px;
   overflow-y: auto;
 }
