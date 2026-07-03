@@ -14,6 +14,7 @@ function SidebarLayout({
     titulo,
     onBack,
     onHome,
+    actions,
     user = null,
     onLogin,
 }) {
@@ -67,8 +68,8 @@ function SidebarLayout({
             <main className="sidebar-main">
 
                 {/*Encabezado (solo si hay título o al menos un botón de acción)*/}
-                {(titulo !== undefined || onBack || onHome) && (
-                    <ContentHeader titulo={titulo} onBack={onBack} onHome={onHome} />
+                {(titulo !== undefined || onBack || onHome || actions) && (
+                    <ContentHeader titulo={titulo} onBack={onBack} onHome={onHome} actions={actions} />
                 )}
 
                 <div className="sidebar-content-body">

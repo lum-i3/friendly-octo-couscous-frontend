@@ -156,6 +156,110 @@
   text-align: center;
 }
 
+/* ── ESTADÍSTICAS CLIMÁTICAS (tabla de tiles) ───────────────────── */
+.stats-climate-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.83rem;
+}
+
+.stats-climate-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.1fr 1fr;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.stats-climate-row--header {
+  font-weight: 700;
+  color: #10475C;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #D8E7E9;
+  border-radius: 0;
+}
+
+.stats-climate-row--alt { background: rgba(216, 231, 233, 0.28); }
+
+.stats-climate-var { font-weight: 600; color: #10475C; }
+
+.stats-climate-min { color: #2471a3; }
+.stats-climate-avg { font-weight: 700; color: #023731; }
+.stats-climate-max { color: #c0392b; }
+
+.stats-climate-row em {
+  font-style: normal;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-left: 2px;
+}
+
+.stats-climate-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  height: 100%;
+  min-height: 60px;
+}
+
+/* ── ENERGÍA HÍBRIDA ────────────────────────────────────────────── */
+.energia-hibrida-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
+}
+
+.energia-hibrida-chart {
+  flex: 1;
+  position: relative;
+  min-height: 100px;
+}
+
+.energia-hibrida-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-top: 10px;
+  border-top: 1px solid #D8E7E9;
+  flex-shrink: 0;
+}
+
+.energia-hibrida-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 90px;
+}
+
+.energia-hibrida-stat__label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.energia-hibrida-stat__value {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #10475C;
+  text-align: center;
+}
+
+.energia-hibrida-stat__value--solar  { color: #d4900a; }
+.energia-hibrida-stat__value--eolico { color: #1a9e97; }
+
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .dashboard-grid {

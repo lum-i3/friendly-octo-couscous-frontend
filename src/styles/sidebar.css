@@ -249,6 +249,21 @@
   filter: brightness(0) saturate(100%) invert(18%) sepia(60%) saturate(700%) hue-rotate(168deg) brightness(95%) contrast(100%);
 }
 
+/* Botones que usan SVG inline en lugar de PNG */
+.nav-action-btn svg {
+  display: block;
+  color: #065574;
+}
+
+.nav-action-btn--danger svg {
+  color: #c0392b;
+}
+
+.nav-action-btn--danger:hover {
+  background: #fde8e4;
+  border-color: #e8b4ac;
+}
+
 /* ── CUERPO DEL CONTENIDO ── */
 .sidebar-content-body {
   flex: 1;
