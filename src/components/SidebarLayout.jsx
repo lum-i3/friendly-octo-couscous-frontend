@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import MenuIcon from '../assets/Icons/MenuIcon.png';
 import SidebarPerfil from './SidebarPerfil';
@@ -17,8 +17,13 @@ function SidebarLayout({
     actions,
     user = null,
     onLogin,
+    collapsed = false,
 }) {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(!collapsed);
+
+    useEffect(() => {
+        setIsOpen(!collapsed);
+    }, [collapsed]);
     const location = useLocation();
 
     // Detecta el ítem activo únicamente por URL; sin coincidencia → nada activo

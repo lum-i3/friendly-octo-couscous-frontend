@@ -1,0 +1,253 @@
+/* ── LAYOUT DE PÁGINA ─────────────────────────────────────────────── */
+.estacion-page-wrapper .sidebar-content-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── MAPA WRAPPER (modo normal) ──────────────────────────────────── */
+.estacion-mapa-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 340px;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(16, 71, 92, 0.08);
+}
+
+/* ── BOTÓN PANTALLA COMPLETA ─────────────────────────────────────── */
+.estacion-fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1100;
+  background: #10475C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.78rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.estacion-fullscreen-btn:hover {
+  background: #0a2e3a;
+}
+
+/* En pantalla completa: traslúcido y reposicionado al botom-left */
+.estacion-fullscreen-btn--translucida {
+  top: auto;
+  right: auto;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(16, 71, 92, 0.60);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.estacion-fullscreen-btn--translucida:hover {
+  background: rgba(16, 71, 92, 0.88);
+}
+
+/* ── BARRA DE ICONOS (lado derecho, solo en pantalla completa) ────── */
+.estacion-icon-bar {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1100;
+  background: #03685D;
+  border-radius: 10px 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 6px;
+  gap: 6px;
+}
+
+.estacion-icon-bar__btn {
+  width: 42px;
+  height: 42px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.estacion-icon-bar__btn:hover,
+.estacion-icon-bar__btn--activo {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.estacion-icon-bar__icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* ── CARD FLOTANTE (dato climático, esquina inferior derecha del mapa) */
+.estacion-floating-card {
+  position: absolute;
+  bottom: 44px;
+  right: 58px;
+  z-index: 1100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 14px 20px;
+  min-width: 180px;
+  box-shadow: 0 6px 24px rgba(16, 71, 92, 0.20);
+  animation: estacion-fadeup 0.14s ease;
+}
+
+@keyframes estacion-fadeup {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.estacion-floating-card__label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #10475C;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.estacion-floating-card__valor {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #03685D;
+  line-height: 1.1;
+}
+
+.estacion-floating-card__unidad {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #6b7a80;
+  margin-left: 3px;
+}
+
+/* ── CARDS DE INFORMACIÓN (debajo del mapa) ──────────────────────── */
+.estacion-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.estacion-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(16, 71, 92, 0.08);
+  min-height: 140px;
+  justify-content: center;
+}
+
+.estacion-card__icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(60%) saturate(700%)
+          hue-rotate(168deg) brightness(95%) contrast(100%);
+}
+
+.estacion-card__label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7a80;
+  text-align: center;
+}
+
+.estacion-card__valor {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #10475C;
+  line-height: 1;
+}
+
+.estacion-card__unidad {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6b7a80;
+  margin-left: 3px;
+}
+
+.estacion-card__sin-datos {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: #6b7a80;
+}
+
+/* ── MODO PANTALLA COMPLETA ───────────────────────────────────────── */
+/*
+ * En pantalla completa, el sidebar-content-body sangra hasta los bordes del
+ * sidebar-main (negando sus 16px de padding) para que el mapa ocupe todo.
+ */
+.estacion-page-wrapper--fullscreen .sidebar-content-body {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  margin: 0 -16px -16px;
+  gap: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.estacion-page-wrapper--fullscreen .estacion-mapa-wrapper {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .estacion-mapa-wrapper {
+    height: 260px;
+  }
+
+  .estacion-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* sidebar-main reduce padding a 12px en este breakpoint */
+  .estacion-page-wrapper--fullscreen .sidebar-content-body {
+    margin: 0 -12px -12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .estacion-card {
+    padding: 16px 12px;
+    min-height: 120px;
+  }
+
+  .estacion-floating-card {
+    right: 58px;
+    bottom: 36px;
+    min-width: 150px;
+    padding: 10px 14px;
+  }
+}
