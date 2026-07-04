@@ -89,6 +89,28 @@
   100% { background-position: -200% 0; }
 }
 
+/* ── VARIANT USUARIO (permite scroll, cards de altura fija) ─────── */
+.graficas-page-wrapper--usuario .sidebar-content-body {
+  overflow-y: auto;
+}
+
+.graficas-page-wrapper--usuario .graficas-page {
+  flex: none;
+}
+
+.graficas-page-wrapper--usuario .graficas-layout {
+  flex: none;
+}
+
+.graficas-page-wrapper--usuario .graficas-chart-card {
+  flex: none;
+  min-height: 300px;
+}
+
+.graficas-page-wrapper--usuario .graficas-chart-card__body {
+  min-height: 230px;
+}
+
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   /* En móvil se permite scroll, las gráficas tienen altura fija mínima */

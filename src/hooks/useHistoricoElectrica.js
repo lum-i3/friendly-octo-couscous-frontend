@@ -1,0 +1,57 @@
+import { useState, useEffect } from 'react';
+
+const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+
+function useHistoricoElectrica(fuente, dias = 7) {
+    const [lecturas, setLecturas] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        if (!token) { setCargando(false); return; }
+
+        let cancelado = false;
+        setCargando(true);
+        setError(null);
+
+        const fin    = new Date();
+        const inicio = new Date();
+        inicio.setDate(inicio.getDate() - dias);
+
+        const params = new URLSearchParams({
+            inicio: inicio.toISOString().slice(0, 19),
+            fin:    fin.toISOString().slice(0, 19),
+            fuente,
+            page: '0',
+            size: '200',
+        });
+
+        fetch(`${BASE_URL}/api/telemetria/electrica?${params}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Error ${res.status}`);
+                return res.json();
+            })
+            .then(json => {
+                if (!cancelado) {
+                    const datos = json.datos ?? json;
+                    setLecturas(datos.contenido ?? []);
+                    setCargando(false);
+                }
+            })
+            .catch(err => {
+                if (!cancelado) {
+                    setError(err.message);
+                    setCargando(false);
+                }
+            });
+
+        return () => { cancelado = true; };
+    }, [fuente, dias]);
+
+    return { lecturas, cargando, error };
+}
+
+export default useHistoricoElectrica;
