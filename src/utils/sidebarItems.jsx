@@ -15,6 +15,6 @@ export const USUARIO_ITEMS = [
     { key: 'graficas',  to: '/usuario/graficas',   label: 'Gráficas',                   icon: <img src={IconGraficas} alt="" /> },
     { key: 'estacion',  to: '/usuario/estacion',   label: 'Mi estación',                 icon: <img src={EstacionLogo} alt="" /> },
     { key: 'descargar', to: '/usuario/descargar',  label: 'Descargar gráficas',          icon: <img src={DescargaLogo} alt="" /> },
-    { key: 'perfil',    to: '/usuario/perfil',     label: 'Mi perfil y preferencias',    icon: <img src={UserIcon} alt="" /> },
+    { key: 'perfil',    to: '/usuario/editar-perfil', label: 'Mi perfil y preferencias',    icon: <img src={UserIcon} alt="" /> },
     { key: 'tabla',     to: '/usuario/tabla-datos',label: 'Tabla de datos',              icon: <img src={TablaIcon} alt="" /> },
 ];
