@@ -274,6 +274,49 @@
   box-sizing: border-box;
 }
 
+/* ── BOTÓN CERRAR SESIÓN ── */
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #E94E50;
+  color: #F2F4EB;
+  border: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.sidebar-logout-btn:hover { background-color: #c0392b; }
+
+.sidebar-logout-btn__icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  display: block;
+}
+
+.sidebar-logout-btn--open {
+  justify-content: flex-start;
+  padding: 8px 14px;
+  border-radius: 20px;
+}
+
+.sidebar-logout-btn--closed {
+  justify-content: center;
+  padding: 8px;
+  border-radius: 10px;
+  height: 38px;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .sidebar--open   { width: 200px; }

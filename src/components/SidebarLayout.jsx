@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import MenuIcon from '../assets/Icons/MenuIcon.png';
 import SidebarPerfil from './SidebarPerfil';
 import SidebarLoginBtn from './SidebarLoginBtn';
+import SidebarLogoutBtn from './SidebarLogoutBtn';
 import SidebarNavItem from './SidebarNavItem';
 import ContentHeader from './ContentHeader';
+import useInactividadSesion from '../hooks/useInactividadSesion';
 import '../styles/sidebar.css';
 
 function SidebarLayout({
@@ -20,11 +23,45 @@ function SidebarLayout({
     collapsed = false,
 }) {
     const [isOpen, setIsOpen] = useState(!collapsed);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         setIsOpen(!collapsed);
     }, [collapsed]);
-    const location = useLocation();
+
+    const handleLogout = useCallback(async () => {
+        const { isConfirmed } = await Swal.fire({
+            title: '¿Cerrar sesión?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Cerrar sesión',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#E94E50',
+            cancelButtonColor: '#176682',
+        });
+        if (isConfirmed) {
+            localStorage.removeItem('jwt');
+            navigate('/login', { replace: true });
+        }
+    }, [navigate]);
+
+    const handleInactividad = useCallback(() => {
+        Swal.fire({
+            title: 'Sesión cerrada por inactividad',
+            text: 'No se detectó actividad durante 30 minutos.',
+            icon: 'info',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#176682',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        }).then(() => {
+            localStorage.removeItem('jwt');
+            navigate('/login', { replace: true });
+        });
+    }, [navigate]);
+
+    useInactividadSesion(!!user, handleInactividad);
 
     // Detecta el ítem activo únicamente por URL; sin coincidencia → nada activo
     const activeKey =
@@ -67,6 +104,11 @@ function SidebarLayout({
                         />
                     ))}
                 </nav>
+
+                {/*Botón de cerrar sesión (solo usuarios autenticados)*/}
+                {user && (
+                    <SidebarLogoutBtn onClick={handleLogout} isOpen={isOpen} />
+                )}
             </aside>
 
             {/*ÁREA DE CONTENIDO*/}

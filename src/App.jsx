@@ -1,4 +1,7 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
+//Guards de autenticación
+import PrivateRoute from './components/auth/PrivateRoute';
+import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -14,7 +17,7 @@ import Error404 from './pages/Errors/Error404';
 import Error405 from './pages/Errors/Error405';
 import Error500 from './pages/Errors/Error500';
 import Error503 from './pages/Errors/Error503';
-//Páginas de usuario (pendiente: proteger con guards de autenticación)
+//Páginas de usuario
 import DashboardUsuario from './pages/usuario/DashboardUsuario';
 import GraficasUsuario from './pages/usuario/GraficasUsuario';
 import MiEstacionUsuario from './pages/usuario/MiEstacionUsuario';
@@ -38,22 +41,22 @@ function App() {
     return (
         <Routes>
 
-            {/* Públicas */}
-            <Route path="/"                       element={<DashboardVisitante />} />
-            <Route path="/login"                  element={<Login />} />
-            <Route path="/registro"               element={<FormRegistro />} />
-            <Route path="/recuperar-contrasenia"  element={<RecuperarContrasenia />} />
-            <Route path="/graficas"               element={<GraficasVisitanteRoute />} />
-            <Route path="/tabla-datos"            element={<TablaDatosUsuario />} />
+            {/* Públicas — redirigen al dashboard si hay sesión activa */}
+            <Route path="/"                       element={<PublicOnlyRoute><DashboardVisitante /></PublicOnlyRoute>} />
+            <Route path="/login"                  element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+            <Route path="/registro"               element={<PublicOnlyRoute><FormRegistro /></PublicOnlyRoute>} />
+            <Route path="/recuperar-contrasenia"  element={<PublicOnlyRoute><RecuperarContrasenia /></PublicOnlyRoute>} />
+            <Route path="/graficas"               element={<PublicOnlyRoute><GraficasVisitanteRoute /></PublicOnlyRoute>} />
+            <Route path="/tabla-datos"            element={<PublicOnlyRoute><TablaDatosUsuario /></PublicOnlyRoute>} />
 
-            {/* Usuario (pendiente: agregar guards de autenticación) */}
-            <Route path="/usuario/dashboard"      element={<DashboardUsuario />} />
-            <Route path="/usuario/graficas"       element={<GraficasUsuario />} />
-            <Route path="/usuario/estacion"       element={<MiEstacionUsuario />} />
-            <Route path="/usuario/descargar"      element={<DescargarGraficas />} />
-            <Route path="/usuario/perfil"         element={<Perfil />} />
-            <Route path="/usuario/editar-perfil"  element={<EditarPerfil />} />
-            <Route path="/usuario/tabla-datos"    element={<TablasDatosUsuario />} />
+            {/* Usuario — requieren sesión activa */}
+            <Route path="/usuario/dashboard"      element={<PrivateRoute><DashboardUsuario /></PrivateRoute>} />
+            <Route path="/usuario/graficas"       element={<PrivateRoute><GraficasUsuario /></PrivateRoute>} />
+            <Route path="/usuario/estacion"       element={<PrivateRoute><MiEstacionUsuario /></PrivateRoute>} />
+            <Route path="/usuario/descargar"      element={<PrivateRoute><DescargarGraficas /></PrivateRoute>} />
+            <Route path="/usuario/perfil"         element={<PrivateRoute><Perfil /></PrivateRoute>} />
+            <Route path="/usuario/editar-perfil"  element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
+            <Route path="/usuario/tabla-datos"    element={<PrivateRoute><TablasDatosUsuario /></PrivateRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />
