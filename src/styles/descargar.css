@@ -1,0 +1,283 @@
+/* ══════════════════════════════════════════════════════════════════
+   DESCARGAR GRÁFICAS
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── PANTALLA SIN PERMISO ─────────────────────────────────────── */
+.descargar-sin-permiso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 320px;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.descargar-prohibido-icon {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.descargar-sin-permiso__titulo {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #065574;
+  margin: 0;
+}
+
+.descargar-sin-permiso__desc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.92rem;
+  color: #065574;
+  max-width: 400px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── BOTÓN GENÉRICO ───────────────────────────────────────────── */
+.descargar-btn {
+  background: #176682;
+  color: #F2F4EB;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 28px;
+  font-size: 0.9rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.descargar-btn:hover:not(:disabled) { background: #0f4c5c; }
+
+.descargar-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.descargar-btn-full { width: 100%; }
+
+/* ── OVERLAY Y MODAL ─────────────────────────────────────────── */
+.descargar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.descargar-modal {
+  background: #F6F8F2;
+  border-radius: 16px;
+  padding: 28px 32px 32px;
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.descargar-modal__titulo {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #10475C;
+  margin: 0 0 20px 0;
+  padding-right: 36px;
+}
+
+.descargar-modal__cerrar {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #10475C;
+  color: #F6F8F2;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.descargar-modal__cerrar:hover { background: #0a2e3d; }
+
+/* Overrides de colores para campos dentro del modal */
+.descargar-modal .field-input,
+.descargar-modal .field-textarea {
+  background-color: #D8E7E9 !important;
+  color: #10475C !important;
+  border-color: #a8c4ca !important;
+}
+
+.descargar-modal .field-input[readonly] {
+  opacity: 0.72;
+  cursor: default;
+}
+
+.descargar-modal .field-input:focus,
+.descargar-modal .field-textarea:focus {
+  border-color: #176682 !important;
+  box-shadow: 0 0 0 3px rgba(23, 102, 130, 0.15) !important;
+}
+
+.descargar-modal .field-input::placeholder,
+.descargar-modal .field-textarea::placeholder {
+  color: #6d9ba0 !important;
+}
+
+.descargar-modal .field-label {
+  color: #10475C;
+  font-size: 0.82rem;
+}
+
+.descargar-modal .field {
+  margin-bottom: 14px;
+}
+
+.descargar-modal-footer {
+  margin-top: 22px;
+}
+
+/* ── PANTALLA CON PERMISO (DESCARGA) ─────────────────────────── */
+.descargar-con-permiso {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.descargar-card {
+  background: #F6F8F2;
+  border-radius: 14px;
+  padding: 24px 26px;
+}
+
+.descargar-seccion__titulo {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+}
+
+.descargar-seccion__titulo + .descargar-seccion__titulo,
+.descargar-opciones + .descargar-seccion__titulo {
+  margin-top: 18px;
+}
+
+.descargar-opciones {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.descargar-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.descargar-radio-label input[type="radio"] {
+  accent-color: #176682;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.descargar-fecha-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.descargar-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.descargar-field-group label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.descargar-field-group input[type="date"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  border: 1px solid #a8c4ca;
+  border-radius: 10px;
+  background-color: #D8E7E9;
+  color: #10475C;
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.descargar-field-group input[type="date"]:focus {
+  outline: none;
+  border-color: #176682;
+  box-shadow: 0 0 0 3px rgba(23, 102, 130, 0.15);
+}
+
+.descargar-divider {
+  border: none;
+  border-top: 1px solid #c8d8db;
+  margin: 20px 0;
+}
+
+/* Skeleton de carga */
+.descargar-skeleton {
+  background: linear-gradient(90deg, #d0dfe2 25%, #e2eeef 50%, #d0dfe2 75%);
+  background-size: 200% 100%;
+  animation: descargar-shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+@keyframes descargar-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .descargar-modal {
+    padding: 22px 18px 24px;
+  }
+
+  .descargar-fecha-row {
+    grid-template-columns: 1fr;
+  }
+
+  .descargar-sin-permiso__titulo {
+    font-size: 1.1rem;
+  }
+}

@@ -272,6 +272,14 @@
   object-fit: contain;
 }
 
+/* ── Textarea reutilizable (components/FormTextarea.jsx) ── */
+.field-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 /* ── Link de texto reutilizable (components/LinkText.jsx) ──── */
 .link-text {
   color: var(--color-primary);
