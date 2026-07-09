@@ -3,11 +3,23 @@ import TablaIcon from '../assets/Icons/TablaIcon.png';
 import UserIcon from '../assets/Icons/UserIcon.png';
 import EstacionLogo from '../assets/Icons/LogoEstacion.png';
 import DescargaLogo from '../assets/Icons/DescargaLogo.png';
+import UsuariosLogo from '../assets/Icons/UsuariosLogo.png';
+import SolicitudLogo from '../assets/Icons/SolicitudLogo.png';
+import HistorialLogo from '../assets/Icons/HistorialLogo.png';
+import PerfilIcon from '../assets/Icons/PerfilIcon.png';
 
 /** Ítems disponibles para el rol VISITANTE */
 export const VISITANTE_ITEMS = [
     { key: 'graficas', to: '/graficas',    label: 'Gráficas',      icon: <img src={IconGraficas} alt="" /> },
     { key: 'tabla',    to: '/tabla-datos', label: 'Tabla de datos', icon: <img src={TablaIcon}   alt="" /> },
+];
+
+/** Ítems disponibles para el rol ADMINISTRADOR */
+export const ADMIN_ITEMS = [
+    { key: 'usuarios',    to: '/admin/usuarios',    label: 'Usuarios activos',         icon: <img src={UsuariosLogo} alt="" /> },
+    { key: 'solicitudes', to: '/admin/solicitudes', label: 'Solicitudes de descargas', icon: <img src={SolicitudLogo} alt="" /> },
+    { key: 'historial',   to: '/admin/historial',   label: 'Historial de acciones',    icon: <img src={HistorialLogo} alt="" /> },
+    { key: 'perfil',      to: '/admin/perfil',      label: 'Mi perfil y preferencias', icon: <img src={PerfilIcon} alt="" /> },
 ];
 
 /** Ítems disponibles para el rol USUARIO autenticado */

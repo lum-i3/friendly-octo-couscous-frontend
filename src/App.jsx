@@ -2,6 +2,9 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 //Guards de autenticación
 import PrivateRoute from './components/auth/PrivateRoute';
 import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
+import AdminRoute from './components/auth/AdminRoute';
+//Páginas de administrador
+import DashboardAdmin from './pages/admin/DashboardAdmin';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -59,6 +62,9 @@ function App() {
             <Route path="/usuario/perfil"         element={<PrivateRoute><Perfil /></PrivateRoute>} />
             <Route path="/usuario/editar-perfil"  element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
             <Route path="/usuario/tabla-datos"    element={<PrivateRoute><TablasDatosUsuario /></PrivateRoute>} />
+
+            {/* Administrador — requieren rol ADMINISTRADOR o SUPERADMINISTRADOR */}
+            <Route path="/admin/dashboard"  element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />

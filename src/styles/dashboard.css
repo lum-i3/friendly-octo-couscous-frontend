@@ -260,6 +260,126 @@
 .energia-hibrida-stat__value--solar  { color: #d4900a; }
 .energia-hibrida-stat__value--eolico { color: #1a9e97; }
 
+/* ── STAT TILES DE ADMIN ────────────────────────────────────────── */
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.admin-stat__icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(60%) saturate(700%) hue-rotate(168deg) brightness(95%) contrast(100%);
+}
+
+.admin-stat--verde .admin-stat__icon {
+  filter: brightness(0) saturate(100%) invert(48%) sepia(95%) saturate(350%) hue-rotate(95deg) brightness(85%) contrast(100%);
+}
+
+.admin-stat--naranja .admin-stat__icon {
+  filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(450%) hue-rotate(10deg) brightness(95%) contrast(100%);
+}
+
+.admin-stat__numero {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #10475C;
+  line-height: 1;
+}
+
+.admin-stat--verde .admin-stat__numero  { color: #219a52; }
+.admin-stat--naranja .admin-stat__numero { color: #d4680e; }
+
+.admin-stat__label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: #6b7a80;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ── HISTORIAL ADMIN ─────────────────────────────────────────────── */
+.admin-historial {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-historial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+}
+
+.admin-historial-table th {
+  text-align: left;
+  padding: 6px 12px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  color: #10475C;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1.5px solid #D8E7E9;
+  white-space: nowrap;
+}
+
+.admin-historial-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(216, 231, 233, 0.5);
+  vertical-align: middle;
+}
+
+.admin-historial-table tr:last-child td { border-bottom: none; }
+.admin-historial-table tr:hover td { background: rgba(216, 231, 233, 0.25); }
+
+.admin-historial__accion {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 0.71rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: rgba(64, 180, 222, 0.12);
+  color: #10475C;
+}
+
+.admin-historial__accion--positivo { background: rgba(33, 154, 82, 0.12); color: #1a7a41; }
+.admin-historial__accion--negativo { background: rgba(192, 57, 43, 0.12);  color: #c0392b; }
+.admin-historial__accion--neutro   { background: rgba(64, 180, 222, 0.12); color: #10475C; }
+
+.admin-historial__usuario { color: #176682; font-weight: 500; }
+
+.admin-historial__desc {
+  color: #2d3a3e;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-historial__fecha {
+  white-space: nowrap;
+  color: #6b7a80;
+  font-size: 0.76rem;
+}
+
+.admin-historial__empty {
+  text-align: center;
+  color: #6b7a80;
+  padding: 24px;
+  font-size: 0.82rem;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 /* ── TABLA CLIMÁTICA DE RESUMEN ─────────────────────────────────── */
 .tabla-climatica {
   display: grid;

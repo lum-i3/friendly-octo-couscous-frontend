@@ -16,3 +16,14 @@ export function isTokenValid() {
 export function cerrarSesion() {
     localStorage.removeItem('jwt');
 }
+
+export function getTokenRole() {
+    const token = localStorage.getItem('jwt');
+    if (!token) return null;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.rol ?? null;
+    } catch {
+        return null;
+    }
+}
