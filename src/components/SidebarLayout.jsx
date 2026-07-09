@@ -22,12 +22,25 @@ function SidebarLayout({
     onLogin,
     collapsed = false,
 }) {
-    const [isOpen, setIsOpen] = useState(!collapsed);
+    const [isOpen, setIsOpen] = useState(() => {
+        if (collapsed) return false;
+        try {
+            const saved = localStorage.getItem('sidebar-open');
+            return saved !== null ? saved === 'true' : true;
+        } catch { return true; }
+    });
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        setIsOpen(!collapsed);
+        if (collapsed) {
+            setIsOpen(false);
+        } else {
+            try {
+                const saved = localStorage.getItem('sidebar-open');
+                setIsOpen(saved !== null ? saved === 'true' : true);
+            } catch { setIsOpen(true); }
+        }
     }, [collapsed]);
 
     const handleLogout = useCallback(async () => {
@@ -77,7 +90,11 @@ function SidebarLayout({
                 {/*Botón hamburguesa*/}
                 <button
                     className="sidebar-hamburger"
-                    onClick={() => setIsOpen(o => !o)}
+                    onClick={() => setIsOpen(o => {
+                        const next = !o;
+                        try { localStorage.setItem('sidebar-open', String(next)); } catch {}
+                        return next;
+                    })}
                     aria-label="Alternar menú"
                 >
                     <img src={MenuIcon} alt="" className="sidebar-hamburger__icon" />

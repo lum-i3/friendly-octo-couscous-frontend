@@ -9,6 +9,7 @@ import Checkbox from '../../components/Checkbox';
 import NavBackBtn from '../../components/NavBackBtn';
 import NavHomeBtn from '../../components/NavHomeBtn';
 import Imagen from '../../assets/General/ImagenLogin.avif';
+import { REGEX_CORREO } from '../../utils/validaciones';
 import { login } from '../../services/authService';
 import '../../styles/login.css';
 
@@ -18,14 +19,40 @@ const ESTADO_INICIAL = {
     recordarme: false,
 };
 
+function validarCampoLogin(name, valores) {
+    const valor = valores[name];
+    switch (name) {
+        case 'correo':
+            if (!valor.trim()) return 'El correo es obligatorio.';
+            if (!REGEX_CORREO.test(valor)) return 'El formato del correo no es válido.';
+            return '';
+        case 'contrasenia':
+            if (!valor) return 'La contraseña es obligatoria.';
+            return '';
+        default:
+            return '';
+    }
+}
+
 function Login() {
     const navigate = useNavigate();
     const [valores, setValores] = useState(ESTADO_INICIAL);
+    const [errores, setErrores] = useState({});
     const [cargando, setCargando] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setValores((prev) => ({ ...prev, [name]: value }));
+        const nuevosValores = { ...valores, [name]: value };
+        setValores(nuevosValores);
+        setErrores((prev) => {
+            if (!(name in prev)) return prev;
+            return { ...prev, [name]: validarCampoLogin(name, nuevosValores) };
+        });
+    };
+
+    const handleBlur = (e) => {
+        const { name } = e.target;
+        setErrores((prev) => ({ ...prev, [name]: validarCampoLogin(name, valores) }));
     };
 
     const handleCheckboxChange = (e) => {
@@ -36,10 +63,18 @@ function Login() {
         e.preventDefault();
         if (cargando) return;
 
+        const nuevosErrores = {};
+        ['correo', 'contrasenia'].forEach((name) => {
+            const msg = validarCampoLogin(name, valores);
+            if (msg) nuevosErrores[name] = msg;
+        });
+        setErrores(nuevosErrores);
+        if (Object.keys(nuevosErrores).length > 0) return;
+
         setCargando(true);
         try {
             const data = await login(valores.correo, valores.contrasenia);
-            if (data.token) localStorage.setItem('jwt', data.token);
+            if (data?.token) localStorage.setItem('jwt', data.token);
             navigate('/');
         } catch (err) {
             Swal.fire({
@@ -74,6 +109,8 @@ function Login() {
                                     type="email"
                                     value={valores.correo}
                                     onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.correo}
                                     placeholder="tu.correo@ejemplo.com"
                                 />
 
@@ -83,6 +120,8 @@ function Login() {
                                     type="password"
                                     value={valores.contrasenia}
                                     onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={errores.contrasenia}
                                     placeholder="Ingresa tu contraseña"
                                 />
 
@@ -96,7 +135,7 @@ function Login() {
                                     <LinkText to="/recuperar-contrasenia">¿Olvidaste tu contraseña?</LinkText>
                                 </div>
 
-                                <Button type="submit" full disabled={cargando}>
+                                <Button type="submit" full loading={cargando}>
                                     {cargando ? 'Iniciando sesión...' : 'Iniciar sesión'}
                                 </Button>
 

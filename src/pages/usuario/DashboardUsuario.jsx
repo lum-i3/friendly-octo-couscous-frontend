@@ -1,3 +1,6 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import DashboardCard from '../../components/dashboard/DashboardCard';
@@ -23,14 +26,6 @@ function formatTimestamp(iso) {
     });
 }
 
-const DotsIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-        <circle cx="9" cy="4"  r="1.5" />
-        <circle cx="9" cy="9"  r="1.5" />
-        <circle cx="9" cy="14" r="1.5" />
-    </svg>
-);
-
 const LogoutIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <path d="M7 4H4a1 1 0 00-1 1v8a1 1 0 001 1h3"
@@ -43,6 +38,7 @@ const LogoutIcon = () => (
 const DIAS_STATS = 28;
 
 function DashboardUsuario() {
+    const navigate = useNavigate();
     const { datos, cargando: cargandoResumen, error: errorResumen } = useTelemetriaResumen();
     const { perfil } = useUserProfile();
     const { stats: statsClima,      cargando: cargandoClima      } = useEstadisticasClimaticas(DIAS_STATS);
@@ -59,15 +55,26 @@ function DashboardUsuario() {
         foto: perfil.fotoPerfil || null,
     } : null;
 
+    const handleLogout = useCallback(async () => {
+        const { isConfirmed } = await Swal.fire({
+            title: '¿Cerrar sesión?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Cerrar sesión',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#E94E50',
+            cancelButtonColor: '#176682',
+        });
+        if (isConfirmed) {
+            localStorage.removeItem('jwt');
+            navigate('/login', { replace: true });
+        }
+    }, [navigate]);
+
     const headerActions = (
-        <>
-            <button className="nav-action-btn" aria-label="Más opciones" title="Más opciones">
-                <DotsIcon />
-            </button>
-            <button className="nav-action-btn nav-action-btn--danger" aria-label="Cerrar sesión" title="Cerrar sesión">
-                <LogoutIcon />
-            </button>
-        </>
+        <button className="nav-action-btn nav-action-btn--danger" aria-label="Cerrar sesión" title="Cerrar sesión" onClick={handleLogout}>
+            <LogoutIcon />
+        </button>
     );
 
     return (

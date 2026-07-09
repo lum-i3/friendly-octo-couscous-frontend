@@ -1,22 +1,27 @@
+import { useState } from 'react';
 import UserIcon from '../assets/Icons/UserIcon.png';
 import '../styles/sidebar.css';
 
-/**
- * Sección de perfil de la sidebar.
- * - user = null  → ícono de visitante con fondo #10475C.
- * - user = { nombre, foto? } → foto de perfil (o ícono si no tiene foto) + nombre.
- */
+function toFotoSrc(foto) {
+    if (!foto) return null;
+    if (foto.startsWith('data:') || foto.startsWith('http')) return foto;
+    return `data:image/jpeg;base64,${foto}`;
+}
+
 function SidebarPerfil({ user = null, isOpen }) {
+    const [fotoError, setFotoError] = useState(false);
     const avatarClass = `sidebar-perfil__avatar ${isOpen ? 'sidebar-perfil__avatar--open' : 'sidebar-perfil__avatar--closed'}`;
+    const fotoSrc = !fotoError ? toFotoSrc(user?.foto) : null;
 
     return (
         <div className="sidebar-perfil">
             <div className={avatarClass}>
-                {user?.foto ? (
+                {fotoSrc ? (
                     <img
-                        src={user.foto}
+                        src={fotoSrc}
                         alt={user.nombre ?? 'Foto de perfil'}
                         className="sidebar-perfil__foto"
+                        onError={() => setFotoError(true)}
                     />
                 ) : (
                     <img

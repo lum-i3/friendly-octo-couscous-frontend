@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import GraficaLineaTemperatura from '../../components/graficas/GraficaLineaTemperatura';
@@ -10,14 +12,6 @@ import useUserProfile from '../../hooks/useUserProfile';
 import { USUARIO_ITEMS } from '../../utils/sidebarItems.jsx';
 import '../../styles/dashboard.css';
 import '../../styles/graficas.css';
-
-const DotsIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-        <circle cx="9" cy="4"  r="1.5" />
-        <circle cx="9" cy="9"  r="1.5" />
-        <circle cx="9" cy="14" r="1.5" />
-    </svg>
-);
 
 const LogoutIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -43,15 +37,26 @@ function GraficasUsuario() {
         foto: perfil.fotoPerfil || null,
     } : null;
 
+    const handleLogout = useCallback(async () => {
+        const { isConfirmed } = await Swal.fire({
+            title: '¿Cerrar sesión?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Cerrar sesión',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#E94E50',
+            cancelButtonColor: '#176682',
+        });
+        if (isConfirmed) {
+            localStorage.removeItem('jwt');
+            navigate('/login', { replace: true });
+        }
+    }, [navigate]);
+
     const headerActions = (
-        <>
-            <button className="nav-action-btn" aria-label="Más opciones" title="Más opciones">
-                <DotsIcon />
-            </button>
-            <button className="nav-action-btn nav-action-btn--danger" aria-label="Cerrar sesión" title="Cerrar sesión">
-                <LogoutIcon />
-            </button>
-        </>
+        <button className="nav-action-btn nav-action-btn--danger" aria-label="Cerrar sesión" title="Cerrar sesión" onClick={handleLogout}>
+            <LogoutIcon />
+        </button>
     );
 
     return (

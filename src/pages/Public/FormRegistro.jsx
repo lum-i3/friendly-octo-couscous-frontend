@@ -62,17 +62,19 @@ function FormRegistro() {
     const navigate = useNavigate();
     const [valores, setValores] = useState(ESTADO_INICIAL);
     const [errores, setErrores] = useState({});
+    const [errorApi, setErrorApi] = useState('');
     const [cargando, setCargando] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const nuevosValores = { ...valores, [name]: value };
         setValores(nuevosValores);
+        if (errorApi) setErrorApi('');
 
         setErrores((prev) => {
             const next = { ...prev };
-            if (prev[name]) next[name] = validarCampo(name, nuevosValores);
-            if (name === 'contrasenia' && prev.confirmarContrasenia) {
+            if (name in prev) next[name] = validarCampo(name, nuevosValores);
+            if (name === 'contrasenia' && 'confirmarContrasenia' in prev) {
                 next.confirmarContrasenia = validarCampo('confirmarContrasenia', nuevosValores);
             }
             return next;
@@ -94,23 +96,33 @@ function FormRegistro() {
             if (mensaje) nuevosErrores[name] = mensaje;
         });
         setErrores(nuevosErrores);
-        if (Object.keys(nuevosErrores).length > 0) return;
+        if (Object.keys(nuevosErrores).length > 0) {
+            const primerCampo = Object.keys(nuevosErrores)[0];
+            document.getElementById(primerCampo)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
 
+        setErrorApi('');
         setCargando(true);
         try {
-            await registrar(valores);
+            const payload = { ...valores };
+            if (!payload.nombreCompleto.trim()) payload.nombreCompleto = null;
+            await registrar(payload);
             await Swal.fire({
                 icon: 'success',
                 title: '¡Registro exitoso!',
-                text: 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.',
+                text: 'Revisa tu correo e ingresa el código de 6 dígitos para activar tu cuenta.',
                 confirmButtonColor: '#176682',
             });
-            navigate('/login');
+            navigate('/verificar-cuenta', { state: { correo: valores.correo } });
         } catch (err) {
+            console.error('[Registro] Error:', err);
+            const mensaje = err?.message || 'Error inesperado. Intenta de nuevo.';
+            setErrorApi(mensaje);
             Swal.fire({
                 icon: 'error',
                 title: 'Error al registrarse',
-                text: err.message,
+                text: mensaje,
                 confirmButtonColor: '#176682',
             });
         } finally {
@@ -139,6 +151,11 @@ function FormRegistro() {
                             <p className="register-subtitle">Ingresa los datos correspondientes</p>
 
                             <form onSubmit={handleSubmit} noValidate>
+                                {errorApi && (
+                                    <p className="field-error-text" style={{ marginBottom: '12px', fontSize: '0.88rem' }}>
+                                        {errorApi}
+                                    </p>
+                                )}
                                 <FormInput
                                     label="Correo electrónico"
                                     name="correo"
@@ -197,7 +214,7 @@ function FormRegistro() {
                                     placeholder="Repite tu contraseña"
                                 />
 
-                                <Button type="submit" full style={{ marginTop: 6 }} disabled={cargando}>
+                                <Button type="submit" full style={{ marginTop: 6 }} loading={cargando}>
                                     {cargando ? 'Registrando...' : 'Registrarme'}
                                 </Button>
 

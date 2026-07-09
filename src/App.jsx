@@ -7,6 +7,7 @@ import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
 import FormRegistro from './pages/Public/FormRegistro';
 import RecuperarContrasenia from './pages/Public/RecuperarContrasenia';
+import VerificarCuenta from './pages/Public/VerificarCuenta';
 import GraficasVisitante from './pages/Public/GraficasVisitante';
 import TablaDatosUsuario from './pages/Public/TablaDatosUsuario';
 //Páginas de error
@@ -46,6 +47,7 @@ function App() {
             <Route path="/login"                  element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
             <Route path="/registro"               element={<PublicOnlyRoute><FormRegistro /></PublicOnlyRoute>} />
             <Route path="/recuperar-contrasenia"  element={<PublicOnlyRoute><RecuperarContrasenia /></PublicOnlyRoute>} />
+            <Route path="/verificar-cuenta"       element={<VerificarCuenta />} />
             <Route path="/graficas"               element={<PublicOnlyRoute><GraficasVisitanteRoute /></PublicOnlyRoute>} />
             <Route path="/tabla-datos"            element={<PublicOnlyRoute><TablaDatosUsuario /></PublicOnlyRoute>} />
 

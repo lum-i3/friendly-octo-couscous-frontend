@@ -115,6 +115,29 @@
   width: 100%;
 }
 
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+  margin-right: 8px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-primary.btn-loading,
+.btn-primary.btn-loading:disabled {
+  background-color: #0f4c5c;
+  opacity: 1;
+}
+
 /* ── Pantallas de error (pages/Errors) ────────────────────── */
 .error-page {
   width: 100%;

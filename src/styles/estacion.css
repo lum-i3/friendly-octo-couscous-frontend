@@ -54,27 +54,26 @@
   background: rgba(16, 71, 92, 0.88);
 }
 
-/* ── BARRA DE ICONOS (lado derecho, solo en pantalla completa) ────── */
+/* ── BARRA DE ICONOS (esquina superior derecha, solo en pantalla completa) ── */
 .estacion-icon-bar {
   position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
+  top: 12px;
+  right: 12px;
   z-index: 1100;
   background: #03685D;
-  border-radius: 10px 0 0 10px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  padding: 10px 6px;
-  gap: 6px;
+  padding: 8px 6px;
+  gap: 4px;
 }
 
 .estacion-icon-bar__btn {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: 7px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -88,8 +87,8 @@
 }
 
 .estacion-icon-bar__icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
