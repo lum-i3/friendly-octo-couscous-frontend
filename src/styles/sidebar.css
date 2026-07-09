@@ -113,10 +113,19 @@
   align-self: stretch;
 }
 
-.sidebar-login-btn--open   { padding: 8px 16px; border-radius: 20px; }
+.sidebar-login-btn--open   { padding: 8px 16px; border-radius: 20px; gap: 6px; }
 .sidebar-login-btn--closed { padding: 0; height: 28px; border-radius: 8px; font-size: 0; }
 
 .sidebar-login-btn:hover { background-color: #7cb371; }
+
+.sidebar-login-btn__icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(60%) saturate(700%) hue-rotate(168deg) brightness(95%) contrast(100%);
+}
 
 /* ── NAVEGACIÓN ── */
 .sidebar-nav {

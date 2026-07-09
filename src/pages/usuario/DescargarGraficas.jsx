@@ -15,6 +15,7 @@ import FormTextarea from '../../components/FormTextarea';
 import useUserProfile from '../../hooks/useUserProfile';
 import { USUARIO_ITEMS } from '../../utils/sidebarItems.jsx';
 import { REGEX_NOMBRE } from '../../utils/validaciones';
+import DenegadoIcon from '../../assets/Icons/DenegadoIcon.png';
 import '../../styles/descargar.css';
 
 ChartJS.register(
@@ -79,14 +80,6 @@ function fmtFecha(iso) {
 }
 
 /* ── Sub-components ─────────────────────────────────────────── */
-function ProhibidoIcon() {
-    return (
-        <svg className="descargar-prohibido-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" stroke="#E94E50" strokeWidth="1.8" />
-            <line x1="5.05" y1="5.05" x2="18.95" y2="18.95" stroke="#E94E50" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-    );
-}
 
 function CampoReadOnly({ label, value, required }) {
     return (
@@ -678,7 +671,7 @@ function DescargarGraficas() {
                     {!cargando && !perfil?.tienePermisoDescarga && (
                         <>
                             <div className="descargar-sin-permiso">
-                                <ProhibidoIcon />
+                                <img src={DenegadoIcon} alt="" className="descargar-prohibido-icon" />
                                 <h2 className="descargar-sin-permiso__titulo">Acceso restringido</h2>
                                 <p className="descargar-sin-permiso__desc">
                                     Lo sentimos, pero actualmente no cuentas con el permiso para descargar gráficas. Necesitas solicitarlo.

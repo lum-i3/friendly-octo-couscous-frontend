@@ -9,10 +9,12 @@ import ChartVientoRadiacion from '../../components/dashboard/ChartVientoRadiacio
 import ChartEnergiaComparativa from '../../components/dashboard/ChartEnergiaComparativa';
 import ChartStatsClimaticas from '../../components/dashboard/ChartStatsClimaticas';
 import ChartEnergiaHibrida from '../../components/dashboard/ChartEnergiaHibrida';
+import TablaClimatica from '../../components/dashboard/TablaClimatica';
 import useTelemetriaResumen from '../../hooks/useTelemetriaResumen';
 import useUserProfile from '../../hooks/useUserProfile';
 import useEstadisticasClimaticas from '../../hooks/useEstadisticasClimaticas';
 import useEstadisticasCombinadas from '../../hooks/useEstadisticasCombinadas';
+import useResumenClimatico from '../../hooks/useResumenClimatico';
 import { USUARIO_ITEMS } from '../../utils/sidebarItems';
 import '../../styles/dashboard.css';
 
@@ -43,6 +45,7 @@ function DashboardUsuario() {
     const { perfil } = useUserProfile();
     const { stats: statsClima,      cargando: cargandoClima      } = useEstadisticasClimaticas(DIAS_STATS);
     const { stats: statsCombinadas, cargando: cargandoCombinadas } = useEstadisticasCombinadas(DIAS_STATS);
+    const { resumen: resumenClima,  cargando: cargandoTabla      } = useResumenClimatico();
 
     const clima    = datos?.ultimaLecturaClimatica;
     const solar    = datos?.ultimaLecturaFotovoltaica;
@@ -136,6 +139,19 @@ function DashboardUsuario() {
                             cargando={cargandoCombinadas}
                         >
                             <ChartEnergiaHibrida stats={statsCombinadas} />
+                        </DashboardCard>
+
+                        {/* ── Fila 4: Resumen climático (ancha) ── */}
+                        <DashboardCard
+                            titulo="Resumen Climático"
+                            wide
+                            cargando={cargandoTabla}
+                        >
+                            <TablaClimatica
+                                clima={clima}
+                                resumen={resumenClima}
+                                cargando={cargandoTabla}
+                            />
                         </DashboardCard>
 
                     </div>

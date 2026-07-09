@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import IniciarSesionIcon from '../assets/Icons/IniciarSesionIcon.png';
 import '../styles/sidebar.css';
 
 function SidebarLoginBtn({ onClick, isOpen }) {
@@ -16,7 +17,8 @@ function SidebarLoginBtn({ onClick, isOpen }) {
             title={!isOpen ? 'Iniciar sesión' : undefined}
             aria-label="Iniciar sesión"
         >
-            {isOpen ? 'Iniciar sesión' : ''}
+            <img src={IniciarSesionIcon} alt="" className="sidebar-login-btn__icon" />
+            {isOpen && 'Iniciar sesión'}
         </button>
     );
 }

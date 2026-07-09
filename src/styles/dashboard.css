@@ -260,6 +260,59 @@
 .energia-hibrida-stat__value--solar  { color: #d4900a; }
 .energia-hibrida-stat__value--eolico { color: #1a9e97; }
 
+/* ── TABLA CLIMÁTICA DE RESUMEN ─────────────────────────────────── */
+.tabla-climatica {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.tabla-climatica__seccion {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabla-climatica__header {
+  background: #065574;
+  color: #D8E7E9;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+}
+
+.tabla-climatica__fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 0.82rem;
+}
+
+.tabla-climatica__fila:nth-child(even) {
+  background: rgba(216, 231, 233, 0.32);
+}
+
+.tabla-climatica__label {
+  color: #5a6a70;
+  font-weight: 500;
+}
+
+.tabla-climatica__valor {
+  color: #10475C;
+  font-weight: 700;
+  text-align: right;
+}
+
+.tabla-climatica__valor--pos { color: #c0392b; }
+.tabla-climatica__valor--neg { color: #2471a3; }
+
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .dashboard-grid {
@@ -280,5 +333,10 @@
 
   .dashboard-card--wide {
     min-height: 260px;
+  }
+
+  .tabla-climatica {
+    grid-template-columns: 1fr;
+    gap: 16px 0;
   }
 }
