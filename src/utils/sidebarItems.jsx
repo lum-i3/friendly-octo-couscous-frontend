@@ -16,10 +16,11 @@ export const VISITANTE_ITEMS = [
 
 /** Ítems disponibles para el rol ADMINISTRADOR */
 export const ADMIN_ITEMS = [
-    { key: 'usuarios',    to: '/admin/usuarios',    label: 'Usuarios activos',         icon: <img src={UsuariosLogo} alt="" /> },
-    { key: 'solicitudes', to: '/admin/solicitudes', label: 'Solicitudes de descargas', icon: <img src={SolicitudLogo} alt="" /> },
-    { key: 'historial',   to: '/admin/historial',   label: 'Historial de acciones',    icon: <img src={HistorialLogo} alt="" /> },
-    { key: 'perfil',      to: '/admin/perfil',      label: 'Mi perfil y preferencias', icon: <img src={PerfilIcon} alt="" /> },
+    { key: 'usuarios',         to: '/admin/usuarios',          label: 'Usuarios activos',         icon: <img src={UsuariosLogo} alt="" /> },
+    { key: 'administradores',  to: '/admin/administradores',   label: 'Administradores activos',  icon: <img src={UserIcon} alt="" /> },
+    { key: 'solicitudes',      to: '/admin/solicitudes',       label: 'Solicitudes de descargas', icon: <img src={SolicitudLogo} alt="" /> },
+    { key: 'historial',        to: '/admin/historial',         label: 'Historial de acciones',    icon: <img src={HistorialLogo} alt="" /> },
+    { key: 'perfil',           to: '/admin/perfil',            label: 'Mi perfil y preferencias', icon: <img src={PerfilIcon} alt="" /> },
 ];
 
 /** Ítems disponibles para el rol USUARIO autenticado */

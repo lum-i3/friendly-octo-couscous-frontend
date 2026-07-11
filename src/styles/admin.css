@@ -179,6 +179,22 @@
   display: block;
 }
 
+/* Variantes de color para acciones de solicitud */
+.admin-accion-btn--aprobar  { background: #1a7a41; }
+.admin-accion-btn--rechazar { background: #c0392b; }
+.admin-accion-btn--aprobar:hover  { background: #155f32; }
+.admin-accion-btn--rechazar:hover { background: #9b2e22; }
+
+.admin-accion-btn--aprobar  .admin-accion-btn__icon,
+.admin-accion-btn--rechazar .admin-accion-btn__icon {
+  filter: brightness(0) invert(1);
+}
+
+/* Badge de estado de solicitud */
+.admin-badge--pendiente  { background: rgba(212, 104, 14, 0.12); color: #b55b0a; }
+.admin-badge--aprobada   { background: rgba(33, 154, 82, 0.12);  color: #1a7a41; }
+.admin-badge--rechazada  { background: rgba(192, 57, 43, 0.12);  color: #c0392b; }
+
 /* ── PAGINACIÓN ──────────────────────────────────────────────────── */
 .admin-paginacion {
   display: flex;
