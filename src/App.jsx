@@ -7,6 +7,7 @@ import AdminRoute from './components/auth/AdminRoute';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import UsuariosAdmin from './pages/admin/UsuariosAdmin';
 import SolicitudesAdmin from './pages/admin/SolicitudesAdmin';
+import HistorialAdmin from './pages/admin/HistorialAdmin';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -69,6 +70,7 @@ function App() {
             <Route path="/admin/dashboard"    element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
             <Route path="/admin/usuarios"     element={<AdminRoute><UsuariosAdmin /></AdminRoute>} />
             <Route path="/admin/solicitudes"  element={<AdminRoute><SolicitudesAdmin /></AdminRoute>} />
+            <Route path="/admin/historial"    element={<AdminRoute><HistorialAdmin /></AdminRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />
