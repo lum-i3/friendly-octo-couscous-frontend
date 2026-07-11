@@ -5,6 +5,7 @@ import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 import AdminRoute from './components/auth/AdminRoute';
 //Páginas de administrador
 import DashboardAdmin from './pages/admin/DashboardAdmin';
+import UsuariosAdmin from './pages/admin/UsuariosAdmin';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -65,6 +66,7 @@ function App() {
 
             {/* Administrador — requieren rol ADMINISTRADOR o SUPERADMINISTRADOR */}
             <Route path="/admin/dashboard"  element={<AdminRoute><DashboardAdmin /></AdminRoute>} />
+            <Route path="/admin/usuarios"   element={<AdminRoute><UsuariosAdmin /></AdminRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />
