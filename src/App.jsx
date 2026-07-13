@@ -9,6 +9,7 @@ import UsuariosAdmin from './pages/admin/UsuariosAdmin';
 import SolicitudesAdmin from './pages/admin/SolicitudesAdmin';
 import HistorialAdmin from './pages/admin/HistorialAdmin';
 import PerfilAdmin from './pages/admin/PerfilAdmin';
+import AdministradoresAdmin from './pages/admin/AdministradoresAdmin';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -72,7 +73,8 @@ function App() {
             <Route path="/admin/usuarios"     element={<AdminRoute><UsuariosAdmin /></AdminRoute>} />
             <Route path="/admin/solicitudes"  element={<AdminRoute><SolicitudesAdmin /></AdminRoute>} />
             <Route path="/admin/historial"    element={<AdminRoute><HistorialAdmin /></AdminRoute>} />
-            <Route path="/admin/perfil"       element={<AdminRoute><PerfilAdmin /></AdminRoute>} />
+            <Route path="/admin/perfil"          element={<AdminRoute><PerfilAdmin /></AdminRoute>} />
+            <Route path="/admin/administradores" element={<AdminRoute><AdministradoresAdmin /></AdminRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />
