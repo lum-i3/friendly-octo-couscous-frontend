@@ -74,6 +74,7 @@ function AdministradoresAdmin() {
     const [admins, setAdmins] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [accesoDenegado, setAccesoDenegado] = useState(false);
+    const [errorTabla, setErrorTabla] = useState(null);
 
     /* ── Filtros cliente ── */
     const [busqueda, setBusqueda] = useState('');
@@ -96,17 +97,18 @@ function AdministradoresAdmin() {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
+        setErrorTabla(null);
         fetch(`${BASE_URL}/api/admin/administradores`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => {
                 if (res.status === 403) { setAccesoDenegado(true); setCargando(false); return null; }
-                return res.ok ? res.json() : null;
+                return res.ok ? res.json() : Promise.reject(new Error('Error del servidor'));
             })
             .then(json => {
                 if (json) { setAdmins(json.datos ?? []); setCargando(false); }
             })
-            .catch(() => setCargando(false));
+            .catch(() => { setErrorTabla('No se pudo cargar la lista de administradores.'); setCargando(false); });
     }, []);
 
     useEffect(() => { cargarAdmins(); }, [cargarAdmins]);
@@ -337,6 +339,12 @@ function AdministradoresAdmin() {
                         </div>
                     ) : (
                         <div className="admin-tabla-container">
+                            {errorTabla && !cargando && (
+                                <div className="dashboard-error">
+                                    <span>{errorTabla}</span>
+                                </div>
+                            )}
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
                                 <h2 className="admin-tabla-titulo" style={{ margin: 0 }}>Últimos administradores registrados</h2>
                                 {esSuperAdmin && (

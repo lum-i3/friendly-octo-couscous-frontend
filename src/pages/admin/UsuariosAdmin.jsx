@@ -69,6 +69,7 @@ function UsuariosAdmin() {
     /* ── Estado de tabla ── */
     const [usuarios, setUsuarios] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const [errorTabla, setErrorTabla] = useState(null);
     const [pagina, setPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
     const [totalElementos, setTotalElementos] = useState(0);
@@ -88,19 +89,20 @@ function UsuariosAdmin() {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
+        setErrorTabla(null);
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         if (termino) qs.set('termino', termino);
         fetch(`${BASE_URL}/api/admin/usuarios?${qs}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
-            .then(res => res.ok ? res.json() : null)
+            .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
             .then(json => {
                 setUsuarios(json?.datos?.contenido ?? []);
                 setTotalPaginas(json?.datos?.totalPaginas ?? 0);
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => setCargando(false));
+            .catch(() => { setErrorTabla('No se pudo cargar la lista de usuarios.'); setCargando(false); });
     }, [pagina, termino]);
 
     useEffect(() => { cargarUsuarios(); }, [cargarUsuarios]);
@@ -141,8 +143,9 @@ function UsuariosAdmin() {
             if (modo === 'editar') {
                 setPermisoEdit(u.tienePermisoDescarga);
             }
-        } catch {
+        } catch (err) {
             setModal(null);
+            await Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'No se pudo cargar el detalle del usuario.' });
         } finally {
             setModalCargando(false);
         }
@@ -273,6 +276,12 @@ function UsuariosAdmin() {
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimos usuarios registrados</h2>
+
+                        {errorTabla && !cargando && (
+                            <div className="dashboard-error">
+                                <span>{errorTabla}</span>
+                            </div>
+                        )}
 
                         {/* Filtros */}
                         <div className="admin-filtros">

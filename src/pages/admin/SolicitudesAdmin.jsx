@@ -69,6 +69,7 @@ function SolicitudesAdmin() {
     /* ── Estado de tabla ── */
     const [solicitudes, setSolicitudes] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const [errorTabla, setErrorTabla] = useState(null);
     const [pagina, setPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
     const [totalElementos, setTotalElementos] = useState(0);
@@ -87,18 +88,19 @@ function SolicitudesAdmin() {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
+        setErrorTabla(null);
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         fetch(`${BASE_URL}/api/solicitudes?${qs}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
-            .then(res => res.ok ? res.json() : null)
+            .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
             .then(json => {
                 setSolicitudes(json?.datos?.contenido ?? []);
                 setTotalPaginas(json?.datos?.totalPaginas ?? 0);
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => setCargando(false));
+            .catch(() => { setErrorTabla('No se pudo cargar la lista de solicitudes.'); setCargando(false); });
     }, [pagina]);
 
     useEffect(() => { cargarSolicitudes(); }, [cargarSolicitudes]);
@@ -219,6 +221,12 @@ function SolicitudesAdmin() {
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimas solicitudes</h2>
+
+                        {errorTabla && !cargando && (
+                            <div className="dashboard-error">
+                                <span>{errorTabla}</span>
+                            </div>
+                        )}
 
                         {/* Filtros */}
                         <div className="admin-filtros">

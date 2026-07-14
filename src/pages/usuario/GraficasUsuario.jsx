@@ -51,9 +51,9 @@ function GraficasUsuario() {
     const cfg = INTERVALO_CONFIG[intervaloMin];
 
     /* Fetch — sólo se dispara cuando dias o size cambian (no en cada cambio de intervaloMin) */
-    const { lecturas: lectClima,  cargando: cargandoClima  } = useHistoricoClimatica(cfg.dias, cfg.size);
-    const { lecturas: lectSolar,  cargando: cargandoSolar  } = useHistoricoElectrica('FOTOVOLTAICO', cfg.dias, cfg.size);
-    const { lecturas: lectEolica, cargando: cargandoEolica } = useHistoricoElectrica('EOLICO',       cfg.dias, cfg.size);
+    const { lecturas: lectClima,  cargando: cargandoClima,  error: errClima  } = useHistoricoClimatica(cfg.dias, cfg.size);
+    const { lecturas: lectSolar,  cargando: cargandoSolar,  error: errSolar  } = useHistoricoElectrica('FOTOVOLTAICO', cfg.dias, cfg.size);
+    const { lecturas: lectEolica, cargando: cargandoEolica, error: errEolica } = useHistoricoElectrica('EOLICO',       cfg.dias, cfg.size);
 
     /* Downsampling client-side — instantáneo cuando sólo cambia intervaloMin */
     const lcClima  = useMemo(() => downsample(lectClima,  intervaloMin), [lectClima,  intervaloMin]);
@@ -126,7 +126,9 @@ function GraficasUsuario() {
                                 <div className="graficas-chart-card__body">
                                     {cargandoClima
                                         ? <div className="graficas-skeleton" />
-                                        : <GraficaLineaTemperatura lecturas={lcClima} />
+                                        : errClima
+                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
+                                            : <GraficaLineaTemperatura lecturas={lcClima} />
                                     }
                                 </div>
                             </div>
@@ -138,7 +140,9 @@ function GraficasUsuario() {
                                 <div className="graficas-chart-card__body">
                                     {cargandoClima
                                         ? <div className="graficas-skeleton" />
-                                        : <GraficaLineaHumedadViento lecturas={lcClima} />
+                                        : errClima
+                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
+                                            : <GraficaLineaHumedadViento lecturas={lcClima} />
                                     }
                                 </div>
                             </div>
@@ -150,12 +154,14 @@ function GraficasUsuario() {
                                 <div className="graficas-chart-card__body">
                                     {cargandoSolar
                                         ? <div className="graficas-skeleton" />
-                                        : <GraficaLineaElectrico
-                                            lecturas={lcSolar}
-                                            color="#F5A623"
-                                            colorFondo="rgba(245,166,35,0.13)"
-                                            label="Potencia Solar (W)"
-                                        />
+                                        : errSolar
+                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
+                                            : <GraficaLineaElectrico
+                                                lecturas={lcSolar}
+                                                color="#F5A623"
+                                                colorFondo="rgba(245,166,35,0.13)"
+                                                label="Potencia Solar (W)"
+                                            />
                                     }
                                 </div>
                             </div>
@@ -167,12 +173,14 @@ function GraficasUsuario() {
                                 <div className="graficas-chart-card__body">
                                     {cargandoEolica
                                         ? <div className="graficas-skeleton" />
-                                        : <GraficaLineaElectrico
-                                            lecturas={lcEolica}
-                                            color="#4ECDC4"
-                                            colorFondo="rgba(78,205,196,0.13)"
-                                            label="Potencia Eólica (W)"
-                                        />
+                                        : errEolica
+                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
+                                            : <GraficaLineaElectrico
+                                                lecturas={lcEolica}
+                                                color="#4ECDC4"
+                                                colorFondo="rgba(78,205,196,0.13)"
+                                                label="Potencia Eólica (W)"
+                                            />
                                     }
                                 </div>
                             </div>

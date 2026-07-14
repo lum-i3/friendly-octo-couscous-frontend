@@ -83,6 +83,7 @@ function HistorialAdmin() {
     /* ── Estado de tabla ── */
     const [acciones, setAcciones] = useState([]);
     const [cargando, setCargando] = useState(true);
+    const [errorTabla, setErrorTabla] = useState(null);
     const [pagina, setPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
     const [totalElementos, setTotalElementos] = useState(0);
@@ -97,18 +98,19 @@ function HistorialAdmin() {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
+        setErrorTabla(null);
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         fetch(`${BASE_URL}/api/admin/historial?${qs}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
-            .then(res => res.ok ? res.json() : null)
+            .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
             .then(json => {
                 setAcciones(json?.datos?.contenido ?? []);
                 setTotalPaginas(json?.datos?.totalPaginas ?? 0);
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => setCargando(false));
+            .catch(() => { setErrorTabla('No se pudo cargar el historial de acciones.'); setCargando(false); });
     }, [pagina]);
 
     useEffect(() => { cargarHistorial(); }, [cargarHistorial]);
@@ -180,6 +182,12 @@ function HistorialAdmin() {
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimas acciones realizadas</h2>
+
+                        {errorTabla && !cargando && (
+                            <div className="dashboard-error">
+                                <span>{errorTabla}</span>
+                            </div>
+                        )}
 
                         {/* Filtros */}
                         <div className="admin-filtros">

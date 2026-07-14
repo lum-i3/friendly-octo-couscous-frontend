@@ -43,7 +43,7 @@ function EstacionCard({ icon, label, valor, unidad, cargando }) {
 function MiEstacionUsuario() {
     const navigate = useNavigate();
     const [pantallaCompleta, setPantallaCompleta] = useState(false);
-    const { datos, cargando } = useTelemetriaResumen();
+    const { datos, cargando, error } = useTelemetriaResumen();
     const { perfil } = useUserProfile();
 
     const clima = datos?.ultimaLecturaClimatica;
@@ -65,6 +65,13 @@ function MiEstacionUsuario() {
                     onHome={() => navigate('/')}
                     collapsed={pantallaCompleta}
                 >
+                    {error && !cargando && (
+                        <div className="dashboard-error">
+                            <span>No se pudo cargar la telemetría de la estación.</span>
+                            <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{error}</span>
+                        </div>
+                    )}
+
                     {/* Mapa con controles de pantalla completa */}
                     <div className="estacion-mapa-wrapper">
                         <MapaInteractivo
