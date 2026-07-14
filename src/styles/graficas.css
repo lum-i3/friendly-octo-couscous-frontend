@@ -36,6 +36,58 @@
   white-space: nowrap;
 }
 
+/* ── FILA DE SELECTOR DE INTERVALO ─────────────────────────────── */
+.graficas-interval-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.graficas-interval-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #6b7a80;
+  white-space: nowrap;
+  margin-right: 2px;
+}
+
+.graficas-interval-chip {
+  background: transparent;
+  border: 1.5px solid #D8E7E9;
+  color: #6b7a80;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 11px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  line-height: 1.4;
+}
+
+.graficas-interval-chip:hover:not(.graficas-interval-chip--activo) {
+  border-color: #10475C;
+  color: #10475C;
+}
+
+.graficas-interval-chip--activo {
+  background-color: #10475C;
+  border-color: #10475C;
+  color: #fff;
+}
+
+.graficas-interval-ts {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: #8b9ba0;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
 /* ── LAYOUT DE GRÁFICAS ────────────────────────────────────────── */
 .graficas-layout {
   flex: 1;

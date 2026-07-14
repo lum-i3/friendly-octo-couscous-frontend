@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
-function useHistoricoClimatica(dias = 7) {
+/**
+ * @param {number} dias  Ventana de tiempo hacia atrás (default 7)
+ * @param {number} size  Máximo de registros a pedir al backend (default 500)
+ */
+function useHistoricoClimatica(dias = 7, size = 500) {
     const [lecturas, setLecturas] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -22,8 +26,8 @@ function useHistoricoClimatica(dias = 7) {
         const params = new URLSearchParams({
             inicio: inicio.toISOString().slice(0, 19),
             fin:    fin.toISOString().slice(0, 19),
-            page: '0',
-            size: '200',
+            page:   '0',
+            size:   String(size),
         });
 
         fetch(`${BASE_URL}/api/telemetria/climatica?${params}`, {
@@ -48,7 +52,7 @@ function useHistoricoClimatica(dias = 7) {
             });
 
         return () => { cancelado = true; };
-    }, [dias]);
+    }, [dias, size]);
 
     return { lecturas, cargando, error };
 }

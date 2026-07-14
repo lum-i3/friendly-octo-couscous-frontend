@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
-function useHistoricoElectrica(fuente, dias = 7) {
+/**
+ * @param {string} fuente  'FOTOVOLTAICO' | 'EOLICO'
+ * @param {number} dias    Ventana de tiempo hacia atrás (default 7)
+ * @param {number} size    Máximo de registros a pedir al backend (default 500)
+ */
+function useHistoricoElectrica(fuente, dias = 7, size = 500) {
     const [lecturas, setLecturas] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -23,8 +28,8 @@ function useHistoricoElectrica(fuente, dias = 7) {
             inicio: inicio.toISOString().slice(0, 19),
             fin:    fin.toISOString().slice(0, 19),
             fuente,
-            page: '0',
-            size: '200',
+            page:   '0',
+            size:   String(size),
         });
 
         fetch(`${BASE_URL}/api/telemetria/electrica?${params}`, {
@@ -49,7 +54,7 @@ function useHistoricoElectrica(fuente, dias = 7) {
             });
 
         return () => { cancelado = true; };
-    }, [fuente, dias]);
+    }, [fuente, dias, size]);
 
     return { lecturas, cargando, error };
 }

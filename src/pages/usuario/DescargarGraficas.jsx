@@ -172,15 +172,16 @@ function DescargarGraficas() {
             .catch(() => {});
     }, []);
 
-    /* Fecha mínima según tipo/fuente para el date picker */
-    const fechaMin = fechasMin
+    /* Fecha mínima según tipo/fuente para el datetime-local picker (slice a HH:MM) */
+    const fechaMinRaw = fechasMin
         ? tipo === 'CLIMATICO'
             ? fechasMin.climaticaMin
             : fuente === 'FOTOVOLTAICO'
                 ? fechasMin.fotovoltaicoMin
                 : fechasMin.eolicoMin
         : undefined;
-    const fechaMax = fechasMin?.hoy;
+    const fechaMin = fechaMinRaw?.slice(0, 16);
+    const fechaMax = fechasMin?.hoy?.slice(0, 16);
 
     /* ── Fetch vista previa ──────────────────────────────── */
     const fetchPreview = useCallback(async () => {
@@ -197,8 +198,8 @@ function DescargarGraficas() {
 
         const token   = localStorage.getItem('jwt');
         const headers = { Authorization: `Bearer ${token}` };
-        const iniISO  = encodeURIComponent(`${inicio}T00:00:00`);
-        const finISO  = encodeURIComponent(`${fin}T23:59:59`);
+        const iniISO  = encodeURIComponent(`${inicio}:00`);
+        const finISO  = encodeURIComponent(`${fin}:59`);
 
         const telUrl   = tipo === 'CLIMATICO'
             ? `${BASE_URL}/api/telemetria/climatica?inicio=${iniISO}&fin=${finISO}&size=300`
@@ -446,8 +447,8 @@ function DescargarGraficas() {
         try {
             const token  = localStorage.getItem('jwt');
             const params = new URLSearchParams({
-                inicio: `${inicio}T00:00:00`,
-                fin:    `${fin}T23:59:59`,
+                inicio: `${inicio}:00`,
+                fin:    `${fin}:59`,
                 tipo,
                 formato,
             });
@@ -468,7 +469,8 @@ function DescargarGraficas() {
             a.href     = url;
             const ext = formato === 'XLSX' ? 'xlsx' : 'pdf';
             const suf = tipo === 'CLIMATICO' ? 'climatico' : `electrico_${fuente.toLowerCase()}`;
-            a.download = `reporte_${suf}_${inicio}_${fin}.${ext}`;
+            const sufFechas = `${inicio}_${fin}`.replace(/[T:]/g, '-');
+            a.download = `reporte_${suf}_${sufFechas}.${ext}`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -535,12 +537,12 @@ function DescargarGraficas() {
 
                                     <hr className="descargar-divider" />
 
-                                    <p className="descargar-seccion__titulo">Rango de fechas</p>
+                                    <p className="descargar-seccion__titulo">Rango de fechas y hora</p>
                                     <div className="descargar-fecha-row">
                                         <div className="descargar-field-group">
                                             <label htmlFor="d-inicio">Desde</label>
                                             <input
-                                                id="d-inicio" type="date"
+                                                id="d-inicio" type="datetime-local"
                                                 value={inicio}
                                                 min={fechaMin} max={fin || fechaMax}
                                                 onChange={e => { setInicio(e.target.value); setErrFechas(''); }}
@@ -550,7 +552,7 @@ function DescargarGraficas() {
                                         <div className="descargar-field-group">
                                             <label htmlFor="d-fin">Hasta</label>
                                             <input
-                                                id="d-fin" type="date"
+                                                id="d-fin" type="datetime-local"
                                                 value={fin}
                                                 min={inicio || fechaMin} max={fechaMax}
                                                 onChange={e => { setFin(e.target.value); setErrFechas(''); }}

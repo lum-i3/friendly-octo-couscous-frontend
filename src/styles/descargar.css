@@ -247,7 +247,8 @@
   color: var(--color-text);
 }
 
-.descargar-field-group input[type="date"] {
+.descargar-field-group input[type="date"],
+.descargar-field-group input[type="datetime-local"] {
   width: 100%;
   box-sizing: border-box;
   padding: 0.65rem 0.85rem;
@@ -260,7 +261,8 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.descargar-field-group input[type="date"]:focus {
+.descargar-field-group input[type="date"]:focus,
+.descargar-field-group input[type="datetime-local"]:focus {
   outline: none;
   border-color: #176682;
   box-shadow: 0 0 0 3px rgba(23, 102, 130, 0.15);
