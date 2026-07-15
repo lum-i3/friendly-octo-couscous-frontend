@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 //Guards de autenticación
-import PrivateRoute from './components/auth/PrivateRoute';
+import UserRoute from './components/auth/UserRoute';
 import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 import AdminRoute from './components/auth/AdminRoute';
 //Páginas de administrador
@@ -47,6 +48,18 @@ function GraficasVisitanteRoute() {
 }
 
 function App() {
+    /* Cierre de sesión sincronizado entre pestañas:
+       si otra pestaña elimina el JWT, esta pestaña redirige al login. */
+    useEffect(() => {
+        const handleStorage = (e) => {
+            if (e.key === 'jwt' && !e.newValue) {
+                window.location.replace('/login');
+            }
+        };
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
+    }, []);
+
     return (
         <Routes>
 
@@ -60,13 +73,13 @@ function App() {
             <Route path="/tabla-datos"            element={<PublicOnlyRoute><TablaDatosUsuario /></PublicOnlyRoute>} />
 
             {/* Usuario — requieren sesión activa */}
-            <Route path="/usuario/dashboard"      element={<PrivateRoute><DashboardUsuario /></PrivateRoute>} />
-            <Route path="/usuario/graficas"       element={<PrivateRoute><GraficasUsuario /></PrivateRoute>} />
-            <Route path="/usuario/estacion"       element={<PrivateRoute><MiEstacionUsuario /></PrivateRoute>} />
-            <Route path="/usuario/descargar"      element={<PrivateRoute><DescargarGraficas /></PrivateRoute>} />
-            <Route path="/usuario/perfil"         element={<PrivateRoute><Perfil /></PrivateRoute>} />
-            <Route path="/usuario/editar-perfil"  element={<PrivateRoute><EditarPerfil /></PrivateRoute>} />
-            <Route path="/usuario/tabla-datos"    element={<PrivateRoute><TablasDatosUsuario /></PrivateRoute>} />
+            <Route path="/usuario/dashboard"      element={<UserRoute><DashboardUsuario /></UserRoute>} />
+            <Route path="/usuario/graficas"       element={<UserRoute><GraficasUsuario /></UserRoute>} />
+            <Route path="/usuario/estacion"       element={<UserRoute><MiEstacionUsuario /></UserRoute>} />
+            <Route path="/usuario/descargar"      element={<UserRoute><DescargarGraficas /></UserRoute>} />
+            <Route path="/usuario/perfil"         element={<UserRoute><Perfil /></UserRoute>} />
+            <Route path="/usuario/editar-perfil"  element={<UserRoute><EditarPerfil /></UserRoute>} />
+            <Route path="/usuario/tabla-datos"    element={<UserRoute><TablasDatosUsuario /></UserRoute>} />
 
             {/* Administrador — requieren rol ADMINISTRADOR o SUPERADMINISTRADOR */}
             <Route path="/admin/dashboard"    element={<AdminRoute><DashboardAdmin /></AdminRoute>} />

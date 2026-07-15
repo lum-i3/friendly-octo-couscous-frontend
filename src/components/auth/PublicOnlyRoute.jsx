@@ -1,16 +1,18 @@
 import { Navigate } from 'react-router-dom';
-import { isTokenValid } from '../../utils/auth';
+import { isTokenValid, getTokenRole } from '../../utils/auth';
 
 /**
- * Redirige al dashboard de usuario si ya hay una sesión activa.
- * Úsalo en rutas públicas (login, registro, etc.) para evitar
- * que un usuario autenticado regrese a ellas.
+ * Redirige al dashboard correspondiente según el rol si ya hay sesión activa.
+ * Admin/Superadmin → /admin/dashboard
+ * Usuario normal   → /usuario/dashboard
  */
 function PublicOnlyRoute({ children }) {
-    if (isTokenValid()) {
-        return <Navigate to="/usuario/dashboard" replace />;
+    if (!isTokenValid()) return children;
+    const rol = getTokenRole();
+    if (rol === 'ADMINISTRADOR' || rol === 'SUPERADMINISTRADOR') {
+        return <Navigate to="/admin/dashboard" replace />;
     }
-    return children;
+    return <Navigate to="/usuario/dashboard" replace />;
 }
 
 export default PublicOnlyRoute;
