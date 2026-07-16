@@ -228,9 +228,9 @@
 }
 
 .descargar-fecha-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 4px;
 }
 
@@ -416,9 +416,6 @@
 @media (max-width: 560px) {
   .descargar-modal {
     padding: 22px 18px 24px;
-  }
-  .descargar-fecha-row {
-    grid-template-columns: 1fr;
   }
   .descargar-sin-permiso__titulo {
     font-size: 1.1rem;

@@ -6,6 +6,11 @@
   --header-height: 64px;
 }
 
+/* ── SweetAlert2: siempre encima de cualquier modal propio ─────────
+   admin-modal-overlay z-index: 1200, estacion z-index: 1100.
+   SweetAlert2 default: 1060 → queda tapado sin este override.         */
+.swal2-container { z-index: 9999 !important; }
+
 /* ── Transición de entrada entre páginas ──────────────────────────
    Aplicar la clase `page-enter` en el wrapper raíz de cualquier página
    que no use .page-with-header (ej: login, registro, recuperar).        */
