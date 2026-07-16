@@ -1,3 +1,14 @@
+import { useState } from 'react';
+import useEstadisticasClimaticas from '../../hooks/useEstadisticasClimaticas';
+
+const FILTROS = [
+    { id: '1h',  label: '1 hora',  dias: 1 / 24 },
+    { id: '1d',  label: '1 día',   dias: 1       },
+    { id: '7d',  label: '7 días',  dias: 7       },
+    { id: '15d', label: '15 días', dias: 15      },
+    { id: 'mes', label: '1 mes',   dias: 30      },
+];
+
 /* ── Cálculos derivados ── */
 function calcDewPoint(T, RH) {
     if (T == null || RH == null) return null;
@@ -29,13 +40,6 @@ function fmtHL(max, min, unidad = '°C') {
     return `${hi} / ${lo} ${unidad}`;
 }
 
-function fmtDelta(v) {
-    if (v == null) return { texto: '—', clase: '' };
-    const texto = (v >= 0 ? '+' : '') + Number(v).toFixed(1) + ' °C';
-    const clase = v >= 0 ? 'tabla-climatica__valor--pos' : 'tabla-climatica__valor--neg';
-    return { texto, clase };
-}
-
 /* ── Fila de la tabla ── */
 function Fila({ label, valor, extra = '' }) {
     return (
@@ -46,50 +50,67 @@ function Fila({ label, valor, extra = '' }) {
     );
 }
 
-function TablaClimatica({ clima, resumen, cargando }) {
-    if (cargando) return <div className="dashboard-skeleton" />;
+function TablaClimatica({ clima }) {
+    const [filtro, setFiltro] = useState('1d');
+    const diasActual = FILTROS.find(f => f.id === filtro).dias;
+    const { stats, cargando } = useEstadisticasClimaticas(diasActual);
 
-    const T   = clima?.temperatura;
-    const RH  = clima?.humedad;
-    const V   = clima?.viento;
+    const T  = clima?.temperatura;
+    const RH = clima?.humedad;
+    const V  = clima?.viento;
 
-    const dew   = calcDewPoint(T, RH);
-    const fl    = calcFeelsLike(T, V);
-    const delta = (T != null && resumen?.ayer?.promedioTemperatura != null)
-        ? T - resumen.ayer.promedioTemperatura
-        : null;
-    const { texto: deltaTexto, clase: deltaClase } = fmtDelta(delta);
-
-    const { hoy, ayer, semana, mes, anio } = resumen ?? {};
+    const dew = calcDewPoint(T, RH);
+    const fl  = calcFeelsLike(T, V);
 
     return (
-        <div className="tabla-climatica">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
 
-            {/* ── Exterior ── */}
-            <div className="tabla-climatica__seccion">
-                <div className="tabla-climatica__header">Exterior</div>
-                <Fila label="Temperatura"       valor={fmt(T)} />
-                <Fila label="Punto de rocío"    valor={fmt(dew)} />
-                <Fila label="Vs. ayer"          valor={deltaTexto} extra={deltaClase} />
-                <Fila label="Sensación térmica" valor={fmt(fl)} />
-                <Fila label="Hoy Máx / Mín"    valor={fmtHL(hoy?.maxTemperatura, hoy?.minTemperatura)} />
-                <Fila label="Ayer Máx / Mín"   valor={fmtHL(ayer?.maxTemperatura, ayer?.minTemperatura)} />
-                <Fila label="Semanal Máx / Mín" valor={fmtHL(semana?.maxTemperatura, semana?.minTemperatura)} />
-                <Fila label="Mensual Máx / Mín" valor={fmtHL(mes?.maxTemperatura, mes?.minTemperatura)} />
-                <Fila label="Anual Máx / Mín"  valor={fmtHL(anio?.maxTemperatura, anio?.minTemperatura)} />
+            {/* Chips de filtro */}
+            <div className="tabla-filtro-row">
+                {FILTROS.map(f => (
+                    <button
+                        key={f.id}
+                        type="button"
+                        className={`tabla-filtro-chip${filtro === f.id ? ' tabla-filtro-chip--activo' : ''}`}
+                        onClick={() => setFiltro(f.id)}
+                    >
+                        {f.label}
+                    </button>
+                ))}
             </div>
 
-            {/* ── Viento ── */}
-            <div className="tabla-climatica__seccion">
-                <div className="tabla-climatica__header">Viento</div>
-                <Fila label="Velocidad actual"   valor={fmt(V, 1, 'm/s')} />
-                <Fila label="Ráfaga máx. hoy"   valor={fmt(hoy?.maxViento, 1, 'm/s')} />
-                <Fila label="Promedio semanal"   valor={fmt(semana?.promedioViento, 1, 'm/s')} />
-                <Fila label="Ráfaga máx. semana" valor={fmt(semana?.maxViento, 1, 'm/s')} />
-                <Fila label="Promedio mensual"   valor={fmt(mes?.promedioViento, 1, 'm/s')} />
-                <Fila label="Ráfaga máx. mes"    valor={fmt(mes?.maxViento, 1, 'm/s')} />
-            </div>
+            {cargando ? (
+                <div className="dashboard-skeleton" style={{ minHeight: 140 }} />
+            ) : (
+                <div className="tabla-climatica">
 
+                    {/* ── Exterior ── */}
+                    <div className="tabla-climatica__seccion">
+                        <div className="tabla-climatica__header">Exterior</div>
+                        <Fila label="Temperatura"       valor={fmt(T)} />
+                        <Fila label="Punto de rocío"    valor={fmt(dew)} />
+                        <Fila label="Sensación térmica" valor={fmt(fl)} />
+                        <Fila label="Humedad actual"    valor={fmt(RH, 0, '%')} />
+                        <Fila label="Temp. Máx / Mín"  valor={fmtHL(stats?.maxTemperatura, stats?.minTemperatura)} />
+                        <Fila label="Temp. promedio"    valor={fmt(stats?.promedioTemperatura)} />
+                        <Fila label="Humedad Máx / Mín" valor={fmtHL(stats?.maxHumedad, stats?.minHumedad, '%')} />
+                        <Fila label="Humedad promedio"  valor={fmt(stats?.promedioHumedad, 0, '%')} />
+                    </div>
+
+                    {/* ── Viento ── */}
+                    <div className="tabla-climatica__seccion">
+                        <div className="tabla-climatica__header">Viento y Radiación</div>
+                        <Fila label="Velocidad actual"   valor={fmt(V, 1, 'm/s')} />
+                        <Fila label="Ráfaga máxima"      valor={fmt(stats?.maxViento, 1, 'm/s')} />
+                        <Fila label="Vel. promedio"       valor={fmt(stats?.promedioViento, 1, 'm/s')} />
+                        <Fila label="Radiación actual"    valor={fmt(clima?.radiacion, 0, 'W/m²')} />
+                        <Fila label="Radiación máx."      valor={fmt(stats?.maxRadiacion, 0, 'W/m²')} />
+                        <Fila label="Radiación prom."     valor={fmt(stats?.promedioRadiacion, 0, 'W/m²')} />
+                        <Fila label="Presión promedio"    valor={fmt(stats?.promedioPresion, 1, 'hPa')} />
+                    </div>
+
+                </div>
+            )}
         </div>
     );
 }

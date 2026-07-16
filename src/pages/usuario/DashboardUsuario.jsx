@@ -14,7 +14,6 @@ import useTelemetriaResumen from '../../hooks/useTelemetriaResumen';
 import useUserProfile from '../../hooks/useUserProfile';
 import useEstadisticasClimaticas from '../../hooks/useEstadisticasClimaticas';
 import useEstadisticasCombinadas from '../../hooks/useEstadisticasCombinadas';
-import useResumenClimatico from '../../hooks/useResumenClimatico';
 import { USUARIO_ITEMS } from '../../utils/sidebarItems';
 import '../../styles/dashboard.css';
 
@@ -45,7 +44,6 @@ function DashboardUsuario() {
     const { perfil } = useUserProfile();
     const { stats: statsClima,      cargando: cargandoClima      } = useEstadisticasClimaticas(DIAS_STATS);
     const { stats: statsCombinadas, cargando: cargandoCombinadas } = useEstadisticasCombinadas(DIAS_STATS);
-    const { resumen: resumenClima,  cargando: cargandoTabla      } = useResumenClimatico();
 
     const clima    = datos?.ultimaLecturaClimatica;
     const solar    = datos?.ultimaLecturaFotovoltaica;
@@ -142,16 +140,8 @@ function DashboardUsuario() {
                         </DashboardCard>
 
                         {/* ── Fila 4: Resumen climático (ancha) ── */}
-                        <DashboardCard
-                            titulo="Resumen Climático"
-                            wide
-                            cargando={cargandoTabla}
-                        >
-                            <TablaClimatica
-                                clima={clima}
-                                resumen={resumenClima}
-                                cargando={cargandoTabla}
-                            />
+                        <DashboardCard titulo="Resumen Climático" wide>
+                            <TablaClimatica clima={clima} />
                         </DashboardCard>
 
                     </div>

@@ -18,9 +18,8 @@ function useEstadisticasClimaticas(dias = 30) {
         setCargando(true);
         setError(null);
 
-        const fin   = new Date();
-        const inicio = new Date();
-        inicio.setDate(inicio.getDate() - dias);
+        const fin    = new Date();
+        const inicio = new Date(Date.now() - dias * 86400000);
 
         const params = new URLSearchParams({
             inicio: inicio.toISOString().slice(0, 19),

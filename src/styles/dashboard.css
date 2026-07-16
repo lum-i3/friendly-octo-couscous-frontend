@@ -4,6 +4,12 @@
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  animation: page-enter 0.18s ease-out;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
 .page-with-header__body {
@@ -432,6 +438,46 @@
 
 .tabla-climatica__valor--pos { color: #c0392b; }
 .tabla-climatica__valor--neg { color: #2471a3; }
+
+/* ── CHIPS DE FILTRO DE TABLA ───────────────────────────────────── */
+.tabla-filtro-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.tabla-filtro-chip {
+  padding: 3px 11px;
+  border-radius: 20px;
+  border: 1.5px solid #b5cdd4;
+  background: transparent;
+  color: #5a6a70;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  line-height: 1.4;
+}
+
+.tabla-filtro-chip:hover {
+  border-color: #176682;
+  color: #176682;
+  background: rgba(23, 102, 130, 0.06);
+}
+
+.tabla-filtro-chip--activo {
+  background: #065574;
+  color: #D8E7E9;
+  border-color: #065574;
+}
+
+.tabla-filtro-chip--activo:hover {
+  background: #054a65;
+  border-color: #054a65;
+  color: #D8E7E9;
+}
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 960px) {
