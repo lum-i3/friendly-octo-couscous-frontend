@@ -73,6 +73,15 @@
   }
 }
 
+@media (max-width: 380px) {
+  .app-header {
+    padding: 0 0.5rem;
+  }
+  .app-header-logos {
+    gap: 0.6rem;
+  }
+}
+
 /* ── Botón reutilizable (components/Button.jsx) ───────────── */
 .btn {
   display: inline-flex;

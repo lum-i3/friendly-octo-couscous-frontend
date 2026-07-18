@@ -505,4 +505,14 @@
     grid-template-columns: 1fr;
     gap: 16px 0;
   }
+
+  .dashboard-gauge__canvas-wrapper { width: 100px; }
+  .dashboard-gauge__value          { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .dashboard-gauge__canvas-wrapper { width: 82px; }
+  .dashboard-gauge__value          { font-size: 0.78rem; }
+  .dashboard-gauge__label          { font-size: 0.68rem; }
+  .admin-stat__numero              { font-size: 2.5rem; }
 }

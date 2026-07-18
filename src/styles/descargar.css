@@ -280,6 +280,7 @@
   background-size: 200% 100%;
   animation: descargar-shimmer 1.4s infinite;
   border-radius: 8px;
+  max-width: 100%;
 }
 
 @keyframes descargar-shimmer {

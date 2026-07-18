@@ -695,3 +695,16 @@
 @media (max-width: 900px) {
   .respaldo-grid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 520px) {
+  /* En pantallas pequeñas el par "etiqueta / valor" de las filas de info
+     se apila verticalmente para evitar que el texto se comprima o desborde */
+  .respaldo-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+  .respaldo-info-row strong { text-align: left; }
+
+  .respaldo-card__body { padding: 10px 12px; gap: 7px; }
+}
