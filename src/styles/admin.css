@@ -527,3 +527,171 @@
   .admin-modal__footer { padding: 12px 14px 16px; }
   .admin-modal__motivo-wrap { padding: 6px 14px 0; }
 }
+
+/* ── RESPALDO HISTÓRICO ──────────────────────────────────────────── */
+.respaldo-desc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.84rem;
+  color: #6b7a80;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.respaldo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.respaldo-card {
+  border: 1.5px solid #D8E7E9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.respaldo-card__header {
+  padding: 9px 14px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #D8E7E9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.respaldo-card__header--climatico   { background: #065574; }
+.respaldo-card__header--solar       { background: #9a6800; }
+.respaldo-card__header--eolico      { background: #1a9e97; }
+
+.respaldo-card__body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.respaldo-estado {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: #5a6a70;
+}
+
+.respaldo-estado__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.respaldo-estado__dot--activo   { background: #27ae60; }
+.respaldo-estado__dot--progreso { background: #e67e22; animation: respaldo-pulse 1.2s ease infinite; }
+
+@keyframes respaldo-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.respaldo-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.77rem;
+  color: #5a6a70;
+}
+
+.respaldo-info-row strong {
+  color: #10475C;
+  font-weight: 600;
+  text-align: right;
+}
+
+.respaldo-divider {
+  border: none;
+  border-top: 1px solid #EEF4F5;
+  margin: 1px 0;
+}
+
+.respaldo-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.respaldo-field-group label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #5a6a70;
+}
+
+.respaldo-field-group input[type="datetime-local"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  border: 1.5px solid #D8E7E9;
+  border-radius: 8px;
+  background: #f9fbfc;
+  color: #10475C;
+  font-family: 'Inter', system-ui, sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.respaldo-field-group input[type="datetime-local"]:focus {
+  border-color: #176682;
+  box-shadow: 0 0 0 2px rgba(23, 102, 130, 0.12);
+}
+
+.respaldo-field-group input[type="datetime-local"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.respaldo-warning {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.74rem;
+  color: #9a6800;
+  background: rgba(154, 104, 0, 0.08);
+  border-radius: 6px;
+  padding: 5px 9px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.respaldo-error {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.74rem;
+  color: #c0392b;
+  margin: 0;
+}
+
+.respaldo-btn {
+  width: 100%;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  background: #065574;
+  color: #D8E7E9;
+  margin-top: 2px;
+}
+
+.respaldo-btn:hover:not(:disabled) { background: #04405a; }
+.respaldo-btn:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .respaldo-grid { grid-template-columns: 1fr; }
+}
