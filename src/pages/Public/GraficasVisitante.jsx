@@ -21,7 +21,15 @@ function tiempoDesde(fecha) {
 }
 
 function GraficasVisitante({ onBack, onHome }) {
-    const [intervaloSeg, setIntervaloSeg] = useState(60);
+    const [intervaloSeg, setIntervaloSeg] = useState(() => {
+        const saved = sessionStorage.getItem('gv-intervalo');
+        return saved !== null ? Number(saved) : 60;
+    });
+
+    function handleIntervalo(seg) {
+        setIntervaloSeg(seg);
+        sessionStorage.setItem('gv-intervalo', String(seg));
+    }
     const { datos, cargando, error, ultimaActualizacion } = useTelemetriaResumen(intervaloSeg * 1000);
 
     // Contador de segundos para refrescar el texto "hace Xs"
@@ -60,7 +68,7 @@ function GraficasVisitante({ onBack, onHome }) {
                                         key={op.value}
                                         type="button"
                                         className={`graficas-interval-chip${intervaloSeg === op.value ? ' graficas-interval-chip--activo' : ''}`}
-                                        onClick={() => setIntervaloSeg(op.value)}
+                                        onClick={() => handleIntervalo(op.value)}
                                     >
                                         {op.label}
                                     </button>

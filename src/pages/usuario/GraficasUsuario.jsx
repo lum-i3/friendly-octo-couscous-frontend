@@ -46,7 +46,15 @@ const LogoutIcon = () => (
 function GraficasUsuario() {
     const navigate = useNavigate();
     const { perfil } = useUserProfile();
-    const [intervaloMin, setIntervaloMin] = useState(1);
+    const [intervaloMin, setIntervaloMin] = useState(() => {
+        const saved = sessionStorage.getItem('gu-intervalo');
+        return saved !== null ? Number(saved) : 1;
+    });
+
+    function handleIntervalo(min) {
+        setIntervaloMin(min);
+        sessionStorage.setItem('gu-intervalo', String(min));
+    }
 
     const cfg = INTERVALO_CONFIG[intervaloMin];
 
@@ -110,7 +118,7 @@ function GraficasUsuario() {
                                     key={min}
                                     type="button"
                                     className={`graficas-interval-chip${intervaloMin === min ? ' graficas-interval-chip--activo' : ''}`}
-                                    onClick={() => setIntervaloMin(min)}
+                                    onClick={() => handleIntervalo(min)}
                                 >
                                     {INTERVALO_CONFIG[min].label}
                                 </button>

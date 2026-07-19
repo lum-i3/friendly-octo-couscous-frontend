@@ -443,6 +443,35 @@ function DescargarGraficas() {
         if (new Date(inicio) >= new Date(fin)) { setErrFechas('La fecha de inicio debe ser anterior a la fecha de fin.'); return; }
         setErrFechas('');
 
+        // Confirmación con resumen del reporte antes de descargar
+        const varNombres   = varsActuales.filter(v => variables.has(v)).map(v => VAR_LABEL[v]).join(', ') || '—';
+        const statNombres  = ['PROMEDIO', 'MAXIMO', 'MINIMO', 'MODA']
+            .filter(s => estadisticas.has(s))
+            .map(s => ({ PROMEDIO: 'Promedio', MAXIMO: 'Máximo', MINIMO: 'Mínimo', MODA: 'Moda' }[s]))
+            .join(', ') || 'Ninguna';
+        const tipoLabel    = tipo === 'CLIMATICO' ? 'Climático' : `Eléctrico · ${fuente}`;
+        const graficaLabel = tipoGrafica === 'LINEA' ? 'Línea de tiempo' : 'Barras comparativas';
+        const formatoLabel = formato === 'XLSX' ? 'Excel (.xlsx)' : 'PDF';
+
+        const confirmacion = await Swal.fire({
+            title: 'Confirmar descarga',
+            html: `<div style="text-align:left;line-height:1.9;font-size:0.93rem">
+                <b>Formato:</b> ${formatoLabel}<br>
+                <b>Tipo de datos:</b> ${tipoLabel}<br>
+                <b>Periodo:</b> ${inicio.replace('T',' ')} — ${fin.replace('T',' ')}<br>
+                <b>Variables:</b> ${varNombres}<br>
+                <b>Tipo de gráfica:</b> ${graficaLabel}<br>
+                <b>Estadísticas:</b> ${statNombres}
+            </div>`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#176682',
+            cancelButtonColor: '#6b7a80',
+            confirmButtonText: 'Descargar',
+            cancelButtonText: 'Cancelar',
+        });
+        if (!confirmacion.isConfirmed) return;
+
         setDescargando(true);
         try {
             const token  = localStorage.getItem('jwt');
