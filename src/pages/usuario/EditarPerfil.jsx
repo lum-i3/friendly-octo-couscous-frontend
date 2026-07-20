@@ -125,6 +125,31 @@ function EditarPerfil() {
         return Object.keys(errs).length === 0;
     };
 
+    /* ── Guardar solo la foto ── */
+    const handleGuardarFoto = async () => {
+        if (!fotoNueva) return;
+        setGuardandoG(true);
+        const token = localStorage.getItem('jwt');
+        try {
+            const res = await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ fotoPerfil: fotoNueva }),
+            });
+            const json = await res.json();
+            if (res.ok) {
+                setFotoNueva(null);
+                Swal.fire({ icon: 'success', title: 'Foto actualizada', text: json.mensaje || 'Tu foto de perfil se actualizó.', timer: 2500, showConfirmButton: false });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: json.mensaje || 'No se pudo actualizar la foto.' });
+            }
+        } catch {
+            Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo conectar con el servidor.' });
+        } finally {
+            setGuardandoG(false);
+        }
+    };
+
     /* ── Guardar datos generales ── */
     const handleGuardarGenerales = async () => {
         if (!validarGenerales()) {
@@ -245,9 +270,17 @@ function EditarPerfil() {
     /* ── Preferencia de alertas: selección excluyente + PUT backend ── */
     const handlePreferenciaChange = async (nuevaPref) => {
         if (nuevaPref === preferencia) return;
+        const descripcion = {
+            TODAS:   'Recibirás todas las alertas del sistema: informativas, de confirmación y de error.',
+            SISTEMA: 'Solo recibirás alertas de confirmación. Las informativas no se mostrarán. Las alertas de error siempre se enviarán.',
+            NINGUNA: 'No recibirás alertas informativas ni de confirmación. Las alertas de error siempre se enviarán sin importar esta configuración.',
+        }[nuevaPref] ?? '';
         const { isConfirmed } = await Swal.fire({
             title: '¿Cambiar preferencia de alertas?',
-            text: `Vas a cambiar a "${ALERTAS.find(a => a.key === nuevaPref)?.label}".`,
+            html: `<div style="text-align:left;font-size:0.9rem;line-height:1.6">
+                <b>${ALERTAS.find(a => a.key === nuevaPref)?.label}</b><br/>
+                ${descripcion}
+            </div>`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#176682',
@@ -408,6 +441,17 @@ function EditarPerfil() {
                                     <img src={EditIcon} alt="Editar" className="editar-perfil-foto-btn__icon" />
                                 </button>
                             </div>
+                            {fotoNueva && (
+                                <button
+                                    className="editar-perfil-btn"
+                                    onClick={handleGuardarFoto}
+                                    disabled={guardandoG}
+                                    type="button"
+                                    style={{ marginTop: 8 }}
+                                >
+                                    {guardandoG ? 'Guardando…' : 'Guardar foto'}
+                                </button>
+                            )}
 
                             <button
                                 className="editar-perfil-desactivar-btn"

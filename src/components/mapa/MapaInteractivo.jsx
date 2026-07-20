@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl:     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const CENIDET = [18.8503, -99.2006];
+const CENIDET = [18.879620389097248, -99.22186407553191];
 
 // Componente interno: llama invalidateSize() cuando cambia el contenedor
 function MapResizer({ trigger }) {
@@ -58,8 +58,9 @@ function MapaInteractivo({ pantallaCompleta, onTogglePantallaCompleta, clima }) 
                 />
                 <Marker position={CENIDET}>
                     <Popup>
-                        <strong>Estación CENIDET</strong><br />
-                        Cuernavaca, Morelos, México
+                        <strong>Estación AW-SHEF · CENIDET</strong><br />
+                        Apatzingan 6, Palmira<br />
+                        62490 Cuernavaca, Mor., México
                     </Popup>
                 </Marker>
                 <MapResizer trigger={pantallaCompleta} />

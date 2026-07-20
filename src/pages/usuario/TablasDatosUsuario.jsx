@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import TableSectionTitle from '../../components/tabla/TableSectionTitle';
@@ -50,6 +51,16 @@ function TablasDatosUsuario() {
     } : null;
 
     function toggleColumna(key) {
+        const visibles = Object.values(columnas).filter(Boolean).length;
+        if (columnas[key] && visibles === 1) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Al menos una columna',
+                text: 'Debes mantener al menos una columna visible en la tabla.',
+                confirmButtonColor: '#176682',
+            });
+            return;
+        }
         setColumnas(prev => ({ ...prev, [key]: !prev[key] }));
     }
 

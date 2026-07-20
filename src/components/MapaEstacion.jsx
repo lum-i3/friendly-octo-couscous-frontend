@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
 
 const MapaSencillo = () => {
   // Coordenadas aproximadas (Latitud, Longitud)
-  const posicionEstacion = [18.8503, -99.2006]; 
+  const posicionEstacion = [18.879620389097248, -99.22186407553191];
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
