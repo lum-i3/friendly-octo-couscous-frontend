@@ -127,7 +127,15 @@ function EditarPerfil() {
 
     /* ── Guardar datos generales ── */
     const handleGuardarGenerales = async () => {
-        if (!validarGenerales()) return;
+        if (!validarGenerales()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Revisa los campos',
+                text: 'Hay errores en el formulario. Corrígelos antes de continuar.',
+                confirmButtonColor: '#176682',
+            });
+            return;
+        }
         setGuardandoG(true);
         const token = localStorage.getItem('jwt');
         const body = {};
@@ -177,7 +185,7 @@ function EditarPerfil() {
         if (!pasNueva.trim()) {
             errs.pasNueva = 'Ingresa la nueva contraseña.';
         } else if (!REGEX_PASSWORD.test(pasNueva)) {
-            errs.pasNueva = 'Mínimo 8 caracteres: mayúscula, minúscula, número y símbolo (@$!%*?&_-).';
+            errs.pasNueva = 'Mínimo 8 caracteres: mayúscula, minúscula, número y al menos un símbolo.';
         }
         if (!pasConfirmar.trim()) {
             errs.pasConfirmar = 'Confirma la nueva contraseña.';
@@ -190,7 +198,15 @@ function EditarPerfil() {
 
     /* ── Cambiar contraseña ── */
     const handleCambiarContrasenia = async () => {
-        if (!validarPassword()) return;
+        if (!validarPassword()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Revisa los campos',
+                text: 'Hay errores en el formulario. Corrígelos antes de continuar.',
+                confirmButtonColor: '#176682',
+            });
+            return;
+        }
         setGuardandoP(true);
         const token = localStorage.getItem('jwt');
         try {
@@ -229,6 +245,17 @@ function EditarPerfil() {
     /* ── Preferencia de alertas: selección excluyente + PUT backend ── */
     const handlePreferenciaChange = async (nuevaPref) => {
         if (nuevaPref === preferencia) return;
+        const { isConfirmed } = await Swal.fire({
+            title: '¿Cambiar preferencia de alertas?',
+            text: `Vas a cambiar a "${ALERTAS.find(a => a.key === nuevaPref)?.label}".`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#176682',
+            cancelButtonColor: '#6b7a80',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+        });
+        if (!isConfirmed) return;
         const prevPref = preferencia;
         setPreferencia(nuevaPref);                          // optimistic
         const token = localStorage.getItem('jwt');

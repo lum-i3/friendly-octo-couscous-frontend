@@ -36,16 +36,18 @@ function validarCampo(name, valores) {
             if (!REGEX_CORREO.test(valor)) return 'El formato del correo no es válido.';
             return '';
 
-        case 'nombreCompleto':
-            if (!valor.trim()) return '';
-            if (valor.length > 90) return 'No puede superar los 90 caracteres.';
-            if (!REGEX_NOMBRE.test(valor)) return 'Solo letras y un espacio entre palabras.';
+        case 'nombreCompleto': {
+            const trimmed = valor.trim();
+            if (!trimmed) return '';
+            if (trimmed.length > 90) return 'No puede superar los 90 caracteres.';
+            if (!REGEX_NOMBRE.test(trimmed)) return 'Solo letras y un espacio entre palabras.';
             return '';
+        }
 
         case 'contrasenia':
             if (!valor) return 'La contraseña es obligatoria.';
             if (valor.length < 8) return 'Debe tener al menos 8 caracteres.';
-            if (!REGEX_PASSWORD.test(valor)) return 'Debe incluir mayúscula, minúscula, número y un carácter especial (@$!%*?&_-).';
+            if (!REGEX_PASSWORD.test(valor)) return 'Debe incluir mayúscula, minúscula, número y al menos un símbolo.';
             return '';
 
         case 'confirmarContrasenia':
@@ -99,6 +101,12 @@ function FormRegistro() {
         if (Object.keys(nuevosErrores).length > 0) {
             const primerCampo = Object.keys(nuevosErrores)[0];
             document.getElementById(primerCampo)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            Swal.fire({
+                icon: 'warning',
+                title: 'Revisa los campos',
+                text: 'Hay errores en el formulario. Corrígelos antes de continuar.',
+                confirmButtonColor: '#176682',
+            });
             return;
         }
 
@@ -106,7 +114,7 @@ function FormRegistro() {
         setCargando(true);
         try {
             const payload = { ...valores };
-            if (!payload.nombreCompleto.trim()) payload.nombreCompleto = null;
+            payload.nombreCompleto = payload.nombreCompleto.trim() || null;
             await registrar(payload);
             await Swal.fire({
                 icon: 'success',
@@ -194,7 +202,7 @@ function FormRegistro() {
                                     name="contrasenia"
                                     type="password"
                                     required
-                                    hint="Mín. 8 caracteres, mayúscula y símbolo"
+                                    hint="Mín. 8 caracteres, mayúscula, número y símbolo"
                                     value={valores.contrasenia}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
