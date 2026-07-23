@@ -60,6 +60,33 @@ const CollapseIcon = () => (
     </svg>
 );
 
+function ChartCard({ id, titulo, cargando, error, onExpand, children }) {
+    return (
+        <div className="graficas-chart-card">
+            <div className="graficas-chart-card__header">
+                <h3 className="graficas-chart-card__titulo">{titulo}</h3>
+                <button
+                    type="button"
+                    className="graficas-expand-btn"
+                    aria-label="Ver en pantalla completa"
+                    title="Pantalla completa"
+                    onClick={() => onExpand(id)}
+                >
+                    <ExpandIcon />
+                </button>
+            </div>
+            <div className="graficas-chart-card__body">
+                {cargando
+                    ? <div className="graficas-skeleton" />
+                    : error
+                        ? <p className="graficas-error-msg">No se pudieron cargar los datos.</p>
+                        : children
+                }
+            </div>
+        </div>
+    );
+}
+
 /* Fullscreen overlay for a single chart */
 function ChartFullscreen({ titulo, onClose, children }) {
     return (
@@ -157,34 +184,6 @@ function GraficasUsuario() {
             <LogoutIcon />
         </button>
     );
-
-    /* ── Reusable chart card ───────────────────────────── */
-    function ChartCard({ id, titulo, cargando, error, children }) {
-        return (
-            <div className="graficas-chart-card">
-                <div className="graficas-chart-card__header">
-                    <h3 className="graficas-chart-card__titulo">{titulo}</h3>
-                    <button
-                        type="button"
-                        className="graficas-expand-btn"
-                        aria-label="Ver en pantalla completa"
-                        title="Pantalla completa"
-                        onClick={() => setFullscreen(id)}
-                    >
-                        <ExpandIcon />
-                    </button>
-                </div>
-                <div className="graficas-chart-card__body">
-                    {cargando
-                        ? <div className="graficas-skeleton" />
-                        : error
-                            ? <p className="graficas-error-msg">No se pudieron cargar los datos.</p>
-                            : children
-                    }
-                </div>
-            </div>
-        );
-    }
 
     const charts = [
         {
@@ -285,7 +284,7 @@ function GraficasUsuario() {
                         {/* ── Gráficas ── */}
                         <div className="graficas-layout">
                             {charts.map(ch => (
-                                <ChartCard key={ch.id} {...ch}>
+                                <ChartCard key={ch.id} {...ch} onExpand={setFullscreen}>
                                     {ch.content}
                                 </ChartCard>
                             ))}

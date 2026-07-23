@@ -8,7 +8,7 @@ import NavBackBtn from '../../components/NavBackBtn';
 import NavHomeBtn from '../../components/NavHomeBtn';
 import Imagen from '../../assets/General/ImagenLogin.avif';
 import { REGEX_CORREO, REGEX_PASSWORD, REGEX_CODIGO_RECUPERACION } from '../../utils/validaciones';
-import { forgotPassword, resetPassword } from '../../services/authService';
+import { forgotPassword, resetPassword, verifyResetCode } from '../../services/authService';
 import '../../styles/recuperar.css';
 
 const PASOS = {
@@ -117,10 +117,24 @@ function RecuperarContrasenia() {
         }
     };
 
-    const handleVerificarCodigo = (e) => {
+    const handleVerificarCodigo = async (e) => {
         e.preventDefault();
-        if (!validarPaso(['codigo'])) return;
-        setPaso(PASOS.NUEVA_CONTRASENIA);
+        if (cargando || !validarPaso(['codigo'])) return;
+
+        setCargando(true);
+        try {
+            await verifyResetCode(valores.correo, Number(valores.codigo));
+            setPaso(PASOS.NUEVA_CONTRASENIA);
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Código incorrecto',
+                text: err.message,
+                confirmButtonColor: '#176682',
+            });
+        } finally {
+            setCargando(false);
+        }
     };
 
     const handleCrearNuevaContrasenia = async (e) => {
@@ -202,8 +216,8 @@ function RecuperarContrasenia() {
                                         placeholder="Ej. 123456"
                                     />
 
-                                    <Button type="submit" full style={{ marginTop: 8 }}>
-                                        Verificar código
+                                    <Button type="submit" full style={{ marginTop: 8 }} disabled={cargando}>
+                                        {cargando ? 'Verificando...' : 'Verificar código'}
                                     </Button>
                                 </form>
                             )}
