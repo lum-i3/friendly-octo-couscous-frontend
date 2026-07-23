@@ -479,6 +479,153 @@
   color: #D8E7E9;
 }
 
+/* ── TABLA RESUMEN (grid Actual/Promedio/Máxima/Mínima) ─────────── */
+.resumen-tabla-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.resumen-tabla__titulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #065574;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.resumen-tabla {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e0ecef;
+}
+
+.resumen-tabla__header-row {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  background: #065574;
+}
+
+.resumen-tabla__row {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  border-top: 1px solid #e8f1f3;
+}
+
+.resumen-tabla__row:nth-child(even) {
+  background: rgba(216, 231, 233, 0.22);
+}
+
+.resumen-tabla__row--actual {
+  background: rgba(6, 85, 116, 0.06);
+}
+
+.resumen-tabla__cell {
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  color: #10475C;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.resumen-tabla__cell--col-header {
+  color: #b8d4db;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  justify-content: center;
+}
+
+.resumen-tabla__cell--label {
+  background: transparent;
+}
+
+.resumen-tabla__cell--row-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #5a6a70;
+  justify-content: flex-start;
+  padding-left: 10px;
+  background: rgba(0,0,0,0.02);
+}
+
+.resumen-tabla__cell--high strong { color: #c0392b; }
+.resumen-tabla__cell--low  strong { color: #2471a3; }
+.resumen-tabla__cell--dash {
+  color: #b0bec5;
+  font-size: 0.82rem;
+}
+
+.resumen-tabla__unit {
+  font-size: 0.7rem;
+  color: #6b7a80;
+  font-weight: 400;
+  margin-left: 1px;
+}
+
+.resumen-tabla__dash {
+  color: #b0bec5;
+}
+
+/* Column-count variants */
+.resumen-tabla--cols2 .resumen-tabla__header-row,
+.resumen-tabla--cols2 .resumen-tabla__row {
+  grid-template-columns: 72px repeat(2, 1fr);
+}
+
+.resumen-tabla--cols3 .resumen-tabla__header-row,
+.resumen-tabla--cols3 .resumen-tabla__row {
+  grid-template-columns: 72px repeat(3, 1fr);
+}
+
+.resumen-tabla--cols1 .resumen-tabla__header-row,
+.resumen-tabla--cols1 .resumen-tabla__row {
+  grid-template-columns: 72px 1fr;
+}
+
+/* Condiciones actuales derivadas (sensación + rocío) */
+.resumen-tabla__condiciones-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.resumen-tabla__condicion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(6, 85, 116, 0.06);
+  border-radius: 8px;
+  padding: 6px 12px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.resumen-tabla__condicion-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.74rem;
+  color: #5a6a70;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.resumen-tabla__condicion-valor {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #10475C;
+  margin-left: auto;
+}
+
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .dashboard-grid {

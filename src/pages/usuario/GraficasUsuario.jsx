@@ -6,6 +6,7 @@ import SidebarLayout from '../../components/SidebarLayout';
 import GraficaLineaTemperatura from '../../components/graficas/GraficaLineaTemperatura';
 import GraficaLineaHumedadViento from '../../components/graficas/GraficaLineaHumedadViento';
 import GraficaLineaElectrico from '../../components/graficas/GraficaLineaElectrico';
+import FiltroFechasGrafica from '../../components/graficas/FiltroFechasGrafica';
 import useHistoricoClimatica from '../../hooks/useHistoricoClimatica';
 import useHistoricoElectrica from '../../hooks/useHistoricoElectrica';
 import useUserProfile from '../../hooks/useUserProfile';
@@ -14,25 +15,27 @@ import { USUARIO_ITEMS } from '../../utils/sidebarItems.jsx';
 import '../../styles/dashboard.css';
 import '../../styles/graficas.css';
 
-/*
- * Configuración de intervalo:
- * - dias/size compartidos entre intervalos adyacentes para evitar refetches
- *   cuando el usuario cambia entre 1↔2 min, 5↔10 min, 15↔30 min (mismos parámetros → sin re-fetch)
- * - Con dias=1 y size=600: gap real ~2.4 min → muestra máxima resolución disponible en 24h
- * - Con dias=7 y size=600: gap real ~16.8 min → 30 min reduce a ~336 pts, 15 min a ~600
- * - Con dias=14 y size=600: gap real ~33.6 min → 60 min bucket reduce a ~336 pts
- */
-const INTERVALO_CONFIG = {
-    1:  { label: '1 min',  dias: 1,  size: 600, diasLabel: 'últimas 24 horas' },
-    2:  { label: '2 min',  dias: 1,  size: 600, diasLabel: 'últimas 24 horas' },
-    5:  { label: '5 min',  dias: 3,  size: 600, diasLabel: 'últimos 3 días' },
-    10: { label: '10 min', dias: 3,  size: 600, diasLabel: 'últimos 3 días' },
-    15: { label: '15 min', dias: 7,  size: 600, diasLabel: 'últimos 7 días' },
-    30: { label: '30 min', dias: 7,  size: 600, diasLabel: 'últimos 7 días' },
-    60: { label: '1 hora', dias: 14, size: 600, diasLabel: 'últimos 14 días' },
-};
+const OPCIONES_INTERVALO = [
+    { min: 1,  label: '1 min' },
+    { min: 2,  label: '2 min' },
+    { min: 5,  label: '5 min' },
+    { min: 10, label: '10 min' },
+    { min: 15, label: '15 min' },
+    { min: 30, label: '30 min' },
+    { min: 60, label: '1 hora' },
+];
 
-const OPCIONES_INTERVALO = [1, 2, 5, 10, 15, 30, 60];
+function isoAhora() {
+    return new Date().toISOString().slice(0, 19);
+}
+function isoHace(diasAtras) {
+    const d = new Date();
+    d.setDate(d.getDate() - diasAtras);
+    return d.toISOString().slice(0, 19);
+}
+function filtroDefault() {
+    return { inicioISO: isoHace(1), finISO: isoAhora() };
+}
 
 const LogoutIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -43,9 +46,45 @@ const LogoutIcon = () => (
     </svg>
 );
 
+const ExpandIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M2 5V2h3M10 2h3v3M13 10v3h-3M5 13H2v-3"
+            stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+const CollapseIcon = () => (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M5 2v3H2M10 2v3h3M10 13v-3h3M5 13v-3H2"
+            stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+/* Fullscreen overlay for a single chart */
+function ChartFullscreen({ titulo, onClose, children }) {
+    return (
+        <div className="chart-fullscreen-overlay" role="dialog" aria-modal="true">
+            <div className="chart-fullscreen-inner">
+                <div className="chart-fullscreen-header">
+                    <h2 className="chart-fullscreen-titulo">{titulo}</h2>
+                    <button type="button" className="chart-fullscreen-close" onClick={onClose} aria-label="Cerrar">
+                        <CollapseIcon />
+                        <span>Cerrar</span>
+                    </button>
+                </div>
+                <div className="chart-fullscreen-body">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function GraficasUsuario() {
     const navigate = useNavigate();
     const { perfil } = useUserProfile();
+
+    /* ── Intervalo de muestreo ─────────────────────────── */
     const [intervaloMin, setIntervaloMin] = useState(() => {
         const saved = sessionStorage.getItem('gu-intervalo');
         return saved !== null ? Number(saved) : 1;
@@ -56,14 +95,45 @@ function GraficasUsuario() {
         sessionStorage.setItem('gu-intervalo', String(min));
     }
 
-    const cfg = INTERVALO_CONFIG[intervaloMin];
+    /* ── Rango de fechas ───────────────────────────────── */
+    const [rango, setRango] = useState(filtroDefault);
 
-    /* Fetch — sólo se dispara cuando dias o size cambian (no en cada cambio de intervaloMin) */
-    const { lecturas: lectClima,  cargando: cargandoClima,  error: errClima  } = useHistoricoClimatica(cfg.dias, cfg.size);
-    const { lecturas: lectSolar,  cargando: cargandoSolar,  error: errSolar  } = useHistoricoElectrica('FOTOVOLTAICO', cfg.dias, cfg.size);
-    const { lecturas: lectEolica, cargando: cargandoEolica, error: errEolica } = useHistoricoElectrica('EOLICO',       cfg.dias, cfg.size);
+    function handleRango(inicioISO, finISO) {
+        setRango({ inicioISO, finISO });
+    }
 
-    /* Downsampling client-side — instantáneo cuando sólo cambia intervaloMin */
+    function navegarAnterior() {
+        const durMs = new Date(rango.finISO) - new Date(rango.inicioISO);
+        const newFin   = new Date(rango.inicioISO);
+        const newInicio = new Date(newFin.getTime() - durMs);
+        setRango({
+            inicioISO: newInicio.toISOString().slice(0, 19),
+            finISO:    newFin.toISOString().slice(0, 19),
+        });
+    }
+
+    function navegarSiguiente() {
+        const durMs = new Date(rango.finISO) - new Date(rango.inicioISO);
+        const newInicio = new Date(rango.finISO);
+        const rawFin    = newInicio.getTime() + durMs;
+        const newFin    = new Date(Math.min(rawFin, Date.now()));
+        setRango({
+            inicioISO: newInicio.toISOString().slice(0, 19),
+            finISO:    newFin.toISOString().slice(0, 19),
+        });
+    }
+
+    const enPresente = new Date(rango.finISO) >= new Date(Date.now() - 60000);
+
+    /* ── Fullscreen ────────────────────────────────────── */
+    const [fullscreen, setFullscreen] = useState(null); // null | 'clima' | 'humViento' | 'solar' | 'eolica'
+
+    /* ── Fetch ─────────────────────────────────────────── */
+    const { lecturas: lectClima,  cargando: cargandoClima,  error: errClima  } = useHistoricoClimatica(rango.inicioISO, rango.finISO, 600);
+    const { lecturas: lectSolar,  cargando: cargandoSolar,  error: errSolar  } = useHistoricoElectrica('FOTOVOLTAICO', rango.inicioISO, rango.finISO, 600);
+    const { lecturas: lectEolica, cargando: cargandoEolica, error: errEolica } = useHistoricoElectrica('EOLICO',       rango.inicioISO, rango.finISO, 600);
+
+    /* ── Downsampling ──────────────────────────────────── */
     const lcClima  = useMemo(() => downsample(lectClima,  intervaloMin), [lectClima,  intervaloMin]);
     const lcSolar  = useMemo(() => downsample(lectSolar,  intervaloMin), [lectSolar,  intervaloMin]);
     const lcEolica = useMemo(() => downsample(lectEolica, intervaloMin), [lectEolica, intervaloMin]);
@@ -88,6 +158,67 @@ function GraficasUsuario() {
         </button>
     );
 
+    /* ── Reusable chart card ───────────────────────────── */
+    function ChartCard({ id, titulo, cargando, error, children }) {
+        return (
+            <div className="graficas-chart-card">
+                <div className="graficas-chart-card__header">
+                    <h3 className="graficas-chart-card__titulo">{titulo}</h3>
+                    <button
+                        type="button"
+                        className="graficas-expand-btn"
+                        aria-label="Ver en pantalla completa"
+                        title="Pantalla completa"
+                        onClick={() => setFullscreen(id)}
+                    >
+                        <ExpandIcon />
+                    </button>
+                </div>
+                <div className="graficas-chart-card__body">
+                    {cargando
+                        ? <div className="graficas-skeleton" />
+                        : error
+                            ? <p className="graficas-error-msg">No se pudieron cargar los datos.</p>
+                            : children
+                    }
+                </div>
+            </div>
+        );
+    }
+
+    const charts = [
+        {
+            id: 'clima',
+            titulo: 'Temperatura (°C)',
+            cargando: cargandoClima,
+            error: errClima,
+            content: <GraficaLineaTemperatura lecturas={lcClima} />,
+        },
+        {
+            id: 'humViento',
+            titulo: 'Humedad y Viento',
+            cargando: cargandoClima,
+            error: errClima,
+            content: <GraficaLineaHumedadViento lecturas={lcClima} />,
+        },
+        {
+            id: 'solar',
+            titulo: 'Sistema Fotovoltaico',
+            cargando: cargandoSolar,
+            error: errSolar,
+            content: <GraficaLineaElectrico lecturas={lcSolar} color="#F5A623" colorFondo="rgba(245,166,35,0.13)" label="Potencia Solar (W)" />,
+        },
+        {
+            id: 'eolica',
+            titulo: 'Sistema Eólico',
+            cargando: cargandoEolica,
+            error: errEolica,
+            content: <GraficaLineaElectrico lecturas={lcEolica} color="#4ECDC4" colorFondo="rgba(78,205,196,0.13)" label="Potencia Eólica (W)" />,
+        },
+    ];
+
+    const chartFullscreenData = fullscreen ? charts.find(c => c.id === fullscreen) : null;
+
     return (
         <div className="page-with-header graficas-page-wrapper graficas-page-wrapper--usuario">
             <Header />
@@ -102,101 +233,82 @@ function GraficasUsuario() {
                 >
                     <div className="graficas-page">
 
-                        {/* Chips descriptivos */}
-                        <div className="graficas-labels-row">
-                            <span className="graficas-label-chip">Temperatura</span>
-                            <span className="graficas-label-chip">Humedad y viento</span>
-                            <span className="graficas-label-chip">Energía solar</span>
-                            <span className="graficas-label-chip">Energía eólica</span>
+                        {/* ── Barra de controles ── */}
+                        <div className="graficas-controls-bar">
+
+                            {/* Selector de intervalo de muestreo */}
+                            <div className="graficas-interval-row">
+                                <span className="graficas-interval-label">Intervalo:</span>
+                                {OPCIONES_INTERVALO.map(({ min, label }) => (
+                                    <button
+                                        key={min}
+                                        type="button"
+                                        className={`graficas-interval-chip${intervaloMin === min ? ' graficas-interval-chip--activo' : ''}`}
+                                        onClick={() => handleIntervalo(min)}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Navegación temporal */}
+                            <div className="graficas-nav-row">
+                                <button
+                                    type="button"
+                                    className="graficas-nav-btn"
+                                    onClick={navegarAnterior}
+                                    title="Período anterior"
+                                    aria-label="Período anterior"
+                                >
+                                    ‹ Anterior
+                                </button>
+
+                                <FiltroFechasGrafica
+                                    inicioISO={rango.inicioISO}
+                                    finISO={rango.finISO}
+                                    onChange={handleRango}
+                                />
+
+                                <button
+                                    type="button"
+                                    className={`graficas-nav-btn${enPresente ? ' graficas-nav-btn--disabled' : ''}`}
+                                    onClick={enPresente ? undefined : navegarSiguiente}
+                                    disabled={enPresente}
+                                    title="Período siguiente"
+                                    aria-label="Período siguiente"
+                                >
+                                    Siguiente ›
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Selector de intervalo */}
-                        <div className="graficas-interval-row">
-                            <span className="graficas-interval-label">Intervalo:</span>
-                            {OPCIONES_INTERVALO.map(min => (
-                                <button
-                                    key={min}
-                                    type="button"
-                                    className={`graficas-interval-chip${intervaloMin === min ? ' graficas-interval-chip--activo' : ''}`}
-                                    onClick={() => handleIntervalo(min)}
-                                >
-                                    {INTERVALO_CONFIG[min].label}
-                                </button>
+                        {/* ── Gráficas ── */}
+                        <div className="graficas-layout">
+                            {charts.map(ch => (
+                                <ChartCard key={ch.id} {...ch}>
+                                    {ch.content}
+                                </ChartCard>
                             ))}
                         </div>
 
-                        <div className="graficas-layout">
-
-                            <div className="graficas-chart-card">
-                                <h3 className="graficas-chart-card__titulo">
-                                    Temperatura — {cfg.diasLabel} (°C)
-                                </h3>
-                                <div className="graficas-chart-card__body">
-                                    {cargandoClima
-                                        ? <div className="graficas-skeleton" />
-                                        : errClima
-                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
-                                            : <GraficaLineaTemperatura lecturas={lcClima} />
-                                    }
-                                </div>
-                            </div>
-
-                            <div className="graficas-chart-card">
-                                <h3 className="graficas-chart-card__titulo">
-                                    Humedad y viento — {cfg.diasLabel}
-                                </h3>
-                                <div className="graficas-chart-card__body">
-                                    {cargandoClima
-                                        ? <div className="graficas-skeleton" />
-                                        : errClima
-                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
-                                            : <GraficaLineaHumedadViento lecturas={lcClima} />
-                                    }
-                                </div>
-                            </div>
-
-                            <div className="graficas-chart-card">
-                                <h3 className="graficas-chart-card__titulo">
-                                    Sistema fotovoltaico — {cfg.diasLabel}
-                                </h3>
-                                <div className="graficas-chart-card__body">
-                                    {cargandoSolar
-                                        ? <div className="graficas-skeleton" />
-                                        : errSolar
-                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
-                                            : <GraficaLineaElectrico
-                                                lecturas={lcSolar}
-                                                color="#F5A623"
-                                                colorFondo="rgba(245,166,35,0.13)"
-                                                label="Potencia Solar (W)"
-                                            />
-                                    }
-                                </div>
-                            </div>
-
-                            <div className="graficas-chart-card">
-                                <h3 className="graficas-chart-card__titulo">
-                                    Sistema eólico — {cfg.diasLabel}
-                                </h3>
-                                <div className="graficas-chart-card__body">
-                                    {cargandoEolica
-                                        ? <div className="graficas-skeleton" />
-                                        : errEolica
-                                            ? <p style={{ textAlign: 'center', padding: '40px 16px', color: '#6b7a80', fontFamily: 'Inter,system-ui,sans-serif', fontSize: '0.84rem', margin: 0 }}>No se pudieron cargar los datos.</p>
-                                            : <GraficaLineaElectrico
-                                                lecturas={lcEolica}
-                                                color="#4ECDC4"
-                                                colorFondo="rgba(78,205,196,0.13)"
-                                                label="Potencia Eólica (W)"
-                                            />
-                                    }
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
                 </SidebarLayout>
             </div>
+
+            {/* ── Fullscreen overlay ── */}
+            {chartFullscreenData && (
+                <ChartFullscreen
+                    titulo={chartFullscreenData.titulo}
+                    onClose={() => setFullscreen(null)}
+                >
+                    {chartFullscreenData.cargando
+                        ? <div className="graficas-skeleton" />
+                        : chartFullscreenData.error
+                            ? <p className="graficas-error-msg">No se pudieron cargar los datos.</p>
+                            : chartFullscreenData.content
+                    }
+                </ChartFullscreen>
+            )}
         </div>
     );
 }

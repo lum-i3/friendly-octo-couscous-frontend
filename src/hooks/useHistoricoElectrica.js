@@ -3,30 +3,27 @@ import { useState, useEffect } from 'react';
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
 /**
- * @param {string} fuente  'FOTOVOLTAICO' | 'EOLICO'
- * @param {number} dias    Ventana de tiempo hacia atrás (default 7)
- * @param {number} size    Máximo de registros a pedir al backend (default 500)
+ * @param {string} fuente     'FOTOVOLTAICO' | 'EOLICO'
+ * @param {string} inicioISO  "YYYY-MM-DDTHH:mm:ss"
+ * @param {string} finISO     "YYYY-MM-DDTHH:mm:ss"
+ * @param {number} size       Máximo de registros (default 600)
  */
-function useHistoricoElectrica(fuente, dias = 7, size = 500) {
+function useHistoricoElectrica(fuente, inicioISO, finISO, size = 600) {
     const [lecturas, setLecturas] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem('jwt');
-        if (!token) { setCargando(false); return; }
+        if (!token || !inicioISO || !finISO) { setCargando(false); return; }
 
         let cancelado = false;
         setCargando(true);
         setError(null);
 
-        const fin    = new Date();
-        const inicio = new Date();
-        inicio.setDate(inicio.getDate() - dias);
-
         const params = new URLSearchParams({
-            inicio: inicio.toISOString().slice(0, 19),
-            fin:    fin.toISOString().slice(0, 19),
+            inicio: inicioISO,
+            fin:    finISO,
             fuente,
             page:   '0',
             size:   String(size),
@@ -54,7 +51,7 @@ function useHistoricoElectrica(fuente, dias = 7, size = 500) {
             });
 
         return () => { cancelado = true; };
-    }, [fuente, dias, size]);
+    }, [fuente, inicioISO, finISO, size]);
 
     return { lecturas, cargando, error };
 }

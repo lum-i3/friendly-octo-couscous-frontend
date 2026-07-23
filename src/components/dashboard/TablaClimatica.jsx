@@ -9,7 +9,7 @@ const FILTROS = [
     { id: 'mes', label: '1 mes',   dias: 30      },
 ];
 
-/* ── Cálculos derivados ── */
+/* ── Cálculos derivados (solo para lectura actual) ── */
 function calcDewPoint(T, RH) {
     if (T == null || RH == null) return null;
     const a = 17.27, b = 237.7;
@@ -28,26 +28,22 @@ function calcFeelsLike(T, vms) {
     return T;
 }
 
-/* ── Formateo ── */
-function fmt(v, decimales = 1, unidad = '°C') {
-    return v != null ? `${Number(v).toFixed(decimales)} ${unidad}` : '—';
+function fmt(v, dec = 1, unit = '°C') {
+    if (v == null) return null;
+    return <><strong>{Number(v).toFixed(dec)}</strong><span className="resumen-tabla__unit">{unit}</span></>;
 }
 
-function fmtHL(max, min, unidad = '°C') {
-    if (max == null && min == null) return '—';
-    const hi = max != null ? Number(max).toFixed(1) : '—';
-    const lo = min != null ? Number(min).toFixed(1) : '—';
-    return `${hi} / ${lo} ${unidad}`;
-}
-
-/* ── Fila de la tabla ── */
-function Fila({ label, valor, extra = '' }) {
+function Cell({ v, variant }) {
+    const cls = `resumen-tabla__cell${variant ? ` resumen-tabla__cell--${variant}` : ''}`;
     return (
-        <div className="tabla-climatica__fila">
-            <span className="tabla-climatica__label">{label}</span>
-            <span className={`tabla-climatica__valor ${extra}`}>{valor}</span>
+        <div className={cls}>
+            {v ?? <span className="resumen-tabla__dash">—</span>}
         </div>
     );
+}
+
+function labelPeriodo(id) {
+    return FILTROS.find(f => f.id === id)?.label ?? '';
 }
 
 function TablaClimatica({ clima }) {
@@ -59,11 +55,8 @@ function TablaClimatica({ clima }) {
     const RH = clima?.humedad;
     const V  = clima?.viento;
 
-    const dew = calcDewPoint(T, RH);
-    const fl  = calcFeelsLike(T, V);
-
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+        <div className="resumen-tabla-wrapper">
 
             {/* Chips de filtro */}
             <div className="tabla-filtro-row">
@@ -82,34 +75,112 @@ function TablaClimatica({ clima }) {
             {cargando ? (
                 <div className="dashboard-skeleton" style={{ minHeight: 140 }} />
             ) : (
-                <div className="tabla-climatica">
-
-                    {/* ── Exterior ── */}
-                    <div className="tabla-climatica__seccion">
-                        <div className="tabla-climatica__header">Exterior</div>
-                        <Fila label="Temperatura"       valor={fmt(T)} />
-                        <Fila label="Punto de rocío"    valor={fmt(dew)} />
-                        <Fila label="Sensación térmica" valor={fmt(fl)} />
-                        <Fila label="Humedad actual"    valor={fmt(RH, 0, '%')} />
-                        <Fila label="Temp. Máx / Mín"  valor={fmtHL(stats?.maxTemperatura, stats?.minTemperatura)} />
-                        <Fila label="Temp. promedio"    valor={fmt(stats?.promedioTemperatura)} />
-                        <Fila label="Humedad Máx / Mín" valor={fmtHL(stats?.maxHumedad, stats?.minHumedad, '%')} />
-                        <Fila label="Humedad promedio"  valor={fmt(stats?.promedioHumedad, 0, '%')} />
+                <>
+                    {/* ── Tabla 1: Temperatura y Humedad ── */}
+                    <p className="resumen-tabla__titulo">Temperatura y Humedad — {labelPeriodo(filtro)}</p>
+                    <div className="resumen-tabla resumen-tabla--cols2">
+                        <div className="resumen-tabla__header-row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--label" />
+                            <div className="resumen-tabla__cell resumen-tabla__cell--col-header">Temperatura</div>
+                            <div className="resumen-tabla__cell resumen-tabla__cell--col-header">Humedad</div>
+                        </div>
+                        <div className="resumen-tabla__row resumen-tabla__row--actual">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Actual</div>
+                            <Cell v={fmt(T)} />
+                            <Cell v={fmt(RH, 0, '%')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Promedio</div>
+                            <Cell v={fmt(stats?.promedioTemperatura)} />
+                            <Cell v={fmt(stats?.promedioHumedad, 0, '%')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Máxima</div>
+                            <Cell v={fmt(stats?.maxTemperatura)} variant="high" />
+                            <Cell v={fmt(stats?.maxHumedad, 0, '%')} variant="high" />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Mínima</div>
+                            <Cell v={fmt(stats?.minTemperatura)} variant="low" />
+                            <Cell v={fmt(stats?.minHumedad, 0, '%')} variant="low" />
+                        </div>
                     </div>
 
-                    {/* ── Viento ── */}
-                    <div className="tabla-climatica__seccion">
-                        <div className="tabla-climatica__header">Viento y Radiación</div>
-                        <Fila label="Velocidad actual"   valor={fmt(V, 1, 'm/s')} />
-                        <Fila label="Ráfaga máxima"      valor={fmt(stats?.maxViento, 1, 'm/s')} />
-                        <Fila label="Vel. promedio"       valor={fmt(stats?.promedioViento, 1, 'm/s')} />
-                        <Fila label="Radiación actual"    valor={fmt(clima?.radiacion, 0, 'W/m²')} />
-                        <Fila label="Radiación máx."      valor={fmt(stats?.maxRadiacion, 0, 'W/m²')} />
-                        <Fila label="Radiación prom."     valor={fmt(stats?.promedioRadiacion, 0, 'W/m²')} />
-                        <Fila label="Presión promedio"    valor={fmt(stats?.promedioPresion, 1, 'hPa')} />
+                    {/* ── Tabla 2: Condiciones actuales derivadas ── */}
+                    <div className="resumen-tabla__condiciones-row">
+                        <div className="resumen-tabla__condicion">
+                            <span className="resumen-tabla__condicion-label">Sensación térmica</span>
+                            <span className="resumen-tabla__condicion-valor">
+                                {calcFeelsLike(T, V) != null
+                                    ? <>{Number(calcFeelsLike(T, V)).toFixed(1)} °C</>
+                                    : '—'}
+                            </span>
+                        </div>
+                        <div className="resumen-tabla__condicion">
+                            <span className="resumen-tabla__condicion-label">Punto de rocío</span>
+                            <span className="resumen-tabla__condicion-valor">
+                                {calcDewPoint(T, RH) != null
+                                    ? <>{Number(calcDewPoint(T, RH)).toFixed(1)} °C</>
+                                    : '—'}
+                            </span>
+                        </div>
                     </div>
 
-                </div>
+                    {/* ── Tabla 3: Viento y Radiación ── */}
+                    <p className="resumen-tabla__titulo" style={{ marginTop: 14 }}>Viento y Radiación — {labelPeriodo(filtro)}</p>
+                    <div className="resumen-tabla resumen-tabla--cols2">
+                        <div className="resumen-tabla__header-row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--label" />
+                            <div className="resumen-tabla__cell resumen-tabla__cell--col-header">Viento</div>
+                            <div className="resumen-tabla__cell resumen-tabla__cell--col-header">Radiación Solar</div>
+                        </div>
+                        <div className="resumen-tabla__row resumen-tabla__row--actual">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Actual</div>
+                            <Cell v={fmt(V, 1, 'm/s')} />
+                            <Cell v={fmt(clima?.radiacion, 0, 'W/m²')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Promedio</div>
+                            <Cell v={fmt(stats?.promedioViento, 1, 'm/s')} />
+                            <Cell v={fmt(stats?.promedioRadiacion, 0, 'W/m²')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Máxima</div>
+                            <Cell v={fmt(stats?.maxViento, 1, 'm/s')} variant="high" />
+                            <Cell v={fmt(stats?.maxRadiacion, 0, 'W/m²')} variant="high" />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Mínima</div>
+                            <Cell v={fmt(stats?.minViento, 1, 'm/s')} variant="low" />
+                            <Cell v={fmt(stats?.minRadiacion, 0, 'W/m²')} variant="low" />
+                        </div>
+                    </div>
+
+                    {/* ── Presión atmosférica ── */}
+                    <p className="resumen-tabla__titulo" style={{ marginTop: 14 }}>Presión Atmosférica — {labelPeriodo(filtro)}</p>
+                    <div className="resumen-tabla resumen-tabla--cols1">
+                        <div className="resumen-tabla__header-row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--label" />
+                            <div className="resumen-tabla__cell resumen-tabla__cell--col-header">Presión</div>
+                        </div>
+                        <div className="resumen-tabla__row resumen-tabla__row--actual">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Actual</div>
+                            <Cell v={fmt(clima?.presion, 1, 'hPa')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Promedio</div>
+                            <Cell v={fmt(stats?.promedioPresion, 1, 'hPa')} />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Máxima</div>
+                            <Cell v={fmt(stats?.maxPresion, 1, 'hPa')} variant="high" />
+                        </div>
+                        <div className="resumen-tabla__row">
+                            <div className="resumen-tabla__cell resumen-tabla__cell--row-label">Mínima</div>
+                            <Cell v={fmt(stats?.minPresion, 1, 'hPa')} variant="low" />
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     );
