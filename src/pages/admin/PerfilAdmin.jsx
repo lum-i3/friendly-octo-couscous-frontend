@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import FormInput from '../../components/FormInput';
 import useUserProfile from '../../hooks/useUserProfile';
-import { ADMIN_ITEMS } from '../../utils/sidebarItems.jsx';
+import { getAdminItems } from '../../utils/sidebarItems.jsx';
 import { REGEX_USUARIO, REGEX_NOMBRE, REGEX_PASSWORD } from '../../utils/validaciones';
 import EditIcon from '../../assets/Icons/EditIcon.png';
 import UserIconDefault from '../../assets/Icons/UserIcon.png';
@@ -103,6 +103,30 @@ function PerfilAdmin() {
 
     /* ── Foto ── */
     const handleFotoClick = () => fotoRef.current?.click();
+
+    const handleGuardarFoto = async () => {
+        if (!fotoNueva) return;
+        setGuardandoG(true);
+        const token = localStorage.getItem('jwt');
+        try {
+            const res = await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ fotoPerfil: fotoNueva }),
+            });
+            const json = await res.json();
+            if (res.ok) {
+                setFotoNueva(null);
+                Swal.fire({ icon: 'success', title: 'Foto actualizada', text: json.mensaje || 'Tu foto de perfil se actualizó.', timer: 2500, showConfirmButton: false });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: json.mensaje || 'No se pudo actualizar la foto.' });
+            }
+        } catch {
+            Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo conectar con el servidor.' });
+        } finally {
+            setGuardandoG(false);
+        }
+    };
 
     const handleFotoChange = (e) => {
         const file = e.target.files[0];
@@ -213,6 +237,25 @@ function PerfilAdmin() {
     /* ── Preferencia de alertas ── */
     const handlePreferenciaChange = async (nuevaPref) => {
         if (nuevaPref === preferencia) return;
+        const descripcion = {
+            TODAS:   'Recibirás todas las alertas del sistema: informativas, de confirmación y de error.',
+            SISTEMA: 'Solo recibirás alertas de confirmación. Las informativas no se mostrarán. Las alertas de error siempre se enviarán.',
+            NINGUNA: 'No recibirás alertas informativas ni de confirmación. Las alertas de error siempre se enviarán sin importar esta configuración.',
+        }[nuevaPref] ?? '';
+        const { isConfirmed } = await Swal.fire({
+            title: '¿Cambiar preferencia de alertas?',
+            html: `<div style="text-align:left;font-size:0.9rem;line-height:1.6">
+                <b>${ALERTAS.find(a => a.key === nuevaPref)?.label}</b><br/>
+                ${descripcion}
+            </div>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#176682',
+            cancelButtonColor: '#6b7a80',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+        });
+        if (!isConfirmed) return;
         const prevPref = preferencia;
         setPreferencia(nuevaPref);
         const token = localStorage.getItem('jwt');
@@ -258,7 +301,7 @@ function PerfilAdmin() {
             <Header />
             <div className="page-with-header__body">
                 <SidebarLayout
-                    navItems={ADMIN_ITEMS}
+                    navItems={getAdminItems()}
                     user={sidebarUser}
                     titulo="Mi perfil y preferencias"
                     actions={headerActions}
@@ -274,20 +317,32 @@ function PerfilAdmin() {
                                 style={{ display: 'none' }}
                                 onChange={handleFotoChange}
                             />
-                            <div className="editar-perfil-foto-wrap">
-                                <img
-                                    src={fotoPreview || UserIconDefault}
-                                    alt="Foto de perfil"
-                                    className="editar-perfil-foto"
-                                />
-                                <button
-                                    className="editar-perfil-foto-btn"
-                                    onClick={handleFotoClick}
-                                    title="Cambiar foto de perfil"
-                                    type="button"
-                                >
-                                    <img src={EditIcon} alt="Editar" className="editar-perfil-foto-btn__icon" />
-                                </button>
+                            <div className="editar-perfil-foto-col">
+                                <div className="editar-perfil-foto-wrap">
+                                    <img
+                                        src={fotoPreview || UserIconDefault}
+                                        alt="Foto de perfil"
+                                        className="editar-perfil-foto"
+                                    />
+                                    <button
+                                        className="editar-perfil-foto-btn"
+                                        onClick={handleFotoClick}
+                                        title="Cambiar foto de perfil"
+                                        type="button"
+                                    >
+                                        <img src={EditIcon} alt="Editar" className="editar-perfil-foto-btn__icon" />
+                                    </button>
+                                </div>
+                                {fotoNueva && (
+                                    <button
+                                        className="editar-perfil-btn"
+                                        onClick={handleGuardarFoto}
+                                        disabled={guardandoG}
+                                        type="button"
+                                    >
+                                        {guardandoG ? 'Guardando…' : 'Guardar foto'}
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -308,6 +363,7 @@ function PerfilAdmin() {
                                         onBlur={validarGenerales}
                                         error={errG.nombreUsuario}
                                         placeholder="usuario123"
+                                        required
                                     />
                                     <FormInput
                                         label="Nombre"

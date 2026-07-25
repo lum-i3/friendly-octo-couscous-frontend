@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import useUserProfile from '../../hooks/useUserProfile';
-import { ADMIN_ITEMS } from '../../utils/sidebarItems';
+import { getAdminItems } from '../../utils/sidebarItems';
 import BuscadorIcon from '../../assets/Icons/BuscadorIcon.png';
 import PaginacionBack from '../../assets/Icons/PaginacionBack.png';
 import PaginacionNext from '../../assets/Icons/PaginacionNext.png';
@@ -178,7 +178,7 @@ function HistorialAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={ADMIN_ITEMS} user={sidebarUser} titulo="Historial de acciones" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Historial de acciones" actions={headerActions}>
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimas acciones realizadas</h2>

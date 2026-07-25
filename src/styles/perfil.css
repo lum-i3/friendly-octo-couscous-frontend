@@ -223,6 +223,13 @@
   min-height: 110px;
 }
 
+.editar-perfil-foto-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
 .editar-perfil-foto-wrap {
   position: relative;
   width: 100px;

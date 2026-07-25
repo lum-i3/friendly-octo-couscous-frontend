@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import useUserProfile from '../../hooks/useUserProfile';
-import { ADMIN_ITEMS } from '../../utils/sidebarItems';
+import { getAdminItems } from '../../utils/sidebarItems';
 import OjoAbierto from '../../assets/Icons/OjoAbierto.png';
 import CheckIcon from '../../assets/Icons/CheckIcon.png';
 import CrossIcon from '../../assets/Icons/CrossIcon.png';
@@ -217,7 +217,7 @@ function SolicitudesAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={ADMIN_ITEMS} user={sidebarUser} titulo="Solicitudes de descarga" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Solicitudes de descarga" actions={headerActions}>
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimas solicitudes</h2>

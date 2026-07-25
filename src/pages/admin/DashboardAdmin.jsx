@@ -6,7 +6,7 @@ import SidebarLayout from '../../components/SidebarLayout';
 import DashboardCard from '../../components/dashboard/DashboardCard';
 import useAdminSummary from '../../hooks/useAdminSummary';
 import useUserProfile from '../../hooks/useUserProfile';
-import { ADMIN_ITEMS } from '../../utils/sidebarItems';
+import { getAdminItems } from '../../utils/sidebarItems';
 import UsuariosLogo from '../../assets/Icons/UsuariosLogo.png';
 import UserIcon from '../../assets/Icons/UserIcon.png';
 import SolicitudLogo from '../../assets/Icons/SolicitudLogo.png';
@@ -133,7 +133,7 @@ function DashboardAdmin() {
             <Header />
             <div className="page-with-header__body">
                 <SidebarLayout
-                    navItems={ADMIN_ITEMS}
+                    navItems={getAdminItems()}
                     user={sidebarUser}
                     titulo="Dashboard"
                     actions={headerActions}

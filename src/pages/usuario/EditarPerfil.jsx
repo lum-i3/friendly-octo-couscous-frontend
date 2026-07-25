@@ -426,32 +426,33 @@ function EditarPerfil() {
                                 style={{ display: 'none' }}
                                 onChange={handleFotoChange}
                             />
-                            <div className="editar-perfil-foto-wrap">
-                                <img
-                                    src={fotoPreview || UserIconDefault}
-                                    alt="Foto de perfil"
-                                    className="editar-perfil-foto"
-                                />
-                                <button
-                                    className="editar-perfil-foto-btn"
-                                    onClick={handleFotoClick}
-                                    title="Cambiar foto de perfil"
-                                    type="button"
-                                >
-                                    <img src={EditIcon} alt="Editar" className="editar-perfil-foto-btn__icon" />
-                                </button>
+                            <div className="editar-perfil-foto-col">
+                                <div className="editar-perfil-foto-wrap">
+                                    <img
+                                        src={fotoPreview || UserIconDefault}
+                                        alt="Foto de perfil"
+                                        className="editar-perfil-foto"
+                                    />
+                                    <button
+                                        className="editar-perfil-foto-btn"
+                                        onClick={handleFotoClick}
+                                        title="Cambiar foto de perfil"
+                                        type="button"
+                                    >
+                                        <img src={EditIcon} alt="Editar" className="editar-perfil-foto-btn__icon" />
+                                    </button>
+                                </div>
+                                {fotoNueva && (
+                                    <button
+                                        className="editar-perfil-btn"
+                                        onClick={handleGuardarFoto}
+                                        disabled={guardandoG}
+                                        type="button"
+                                    >
+                                        {guardandoG ? 'Guardando…' : 'Guardar foto'}
+                                    </button>
+                                )}
                             </div>
-                            {fotoNueva && (
-                                <button
-                                    className="editar-perfil-btn"
-                                    onClick={handleGuardarFoto}
-                                    disabled={guardandoG}
-                                    type="button"
-                                    style={{ marginTop: 8 }}
-                                >
-                                    {guardandoG ? 'Guardando…' : 'Guardar foto'}
-                                </button>
-                            )}
 
                             <button
                                 className="editar-perfil-desactivar-btn"

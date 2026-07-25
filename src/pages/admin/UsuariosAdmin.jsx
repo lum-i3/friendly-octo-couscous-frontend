@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Header from '../../components/Header';
 import SidebarLayout from '../../components/SidebarLayout';
 import useUserProfile from '../../hooks/useUserProfile';
-import { ADMIN_ITEMS } from '../../utils/sidebarItems';
+import { getAdminItems } from '../../utils/sidebarItems';
 import OjoAbierto from '../../assets/Icons/OjoAbierto.png';
 import EditarIcon from '../../assets/Icons/EditarIcon.png';
 import CambiarEstadoIcon from '../../assets/Icons/CambiarEstadoIcon.png';
@@ -272,7 +272,7 @@ function UsuariosAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={ADMIN_ITEMS} user={sidebarUser} titulo="Usuarios activos" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Usuarios activos" actions={headerActions}>
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimos usuarios registrados</h2>

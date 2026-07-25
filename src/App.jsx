@@ -11,6 +11,7 @@ import SolicitudesAdmin from './pages/admin/SolicitudesAdmin';
 import HistorialAdmin from './pages/admin/HistorialAdmin';
 import PerfilAdmin from './pages/admin/PerfilAdmin';
 import AdministradoresAdmin from './pages/admin/AdministradoresAdmin';
+import RespaldoAdmin from './pages/admin/RespaldoAdmin';
 //Páginas públicas
 import DashboardVisitante from './pages/Public/DashboardVisitante';
 import Login from './pages/Public/Login';
@@ -88,6 +89,7 @@ function App() {
             <Route path="/admin/historial"    element={<AdminRoute><HistorialAdmin /></AdminRoute>} />
             <Route path="/admin/perfil"          element={<AdminRoute><PerfilAdmin /></AdminRoute>} />
             <Route path="/admin/administradores" element={<AdminRoute><AdministradoresAdmin /></AdminRoute>} />
+            <Route path="/admin/respaldo"        element={<AdminRoute><RespaldoAdmin /></AdminRoute>} />
 
             {/* Errores */}
             <Route path="/error/400" element={<Error400 />} />
