@@ -638,6 +638,7 @@
   border-radius: 8px;
   background: #f9fbfc;
   color: #10475C;
+  color-scheme: light;
   font-family: 'Inter', system-ui, sans-serif;
   outline: none;
   transition: border-color 0.15s;

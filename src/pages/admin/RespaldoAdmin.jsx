@@ -232,7 +232,7 @@ function RespaldoAdmin() {
                                                             setRespaldoDesde(m => ({ ...m, [f.id]: e.target.value }));
                                                             if (respaldoErr[f.id]) setRespaldoErr(m => ({ ...m, [f.id]: '' }));
                                                         }}
-                                                        min={minApi ? minApi.slice(0, 16) : undefined}
+                                                        min={minApi ? minApi.slice(0, 16) : '2018-01-01T00:00'}
                                                         max={new Date().toISOString().slice(0, 16)}
                                                         disabled={enProgreso}
                                                     />
