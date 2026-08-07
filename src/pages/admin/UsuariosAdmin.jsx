@@ -272,7 +272,7 @@ function UsuariosAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Usuarios activos" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Usuarios activos" actions={headerActions} onHome={() => navigate('/admin/dashboard')} onBack={() => navigate(-1)}>
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimos usuarios registrados</h2>
@@ -354,13 +354,17 @@ function UsuariosAdmin() {
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div className="admin-permiso">
-                                                        <img
-                                                            src={u.tienePermisoDescarga ? CheckIcon : CrossIcon}
-                                                            alt={u.tienePermisoDescarga ? 'Sí' : 'No'}
-                                                            className="admin-permiso__icon"
-                                                        />
-                                                    </div>
+                                                    {!u.esAdministrador ? (
+                                                        <div className="admin-permiso">
+                                                            <img
+                                                                src={u.tienePermisoDescarga ? CheckIcon : CrossIcon}
+                                                                alt={u.tienePermisoDescarga ? 'Sí' : 'No'}
+                                                                className="admin-permiso__icon"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div className="admin-permiso">—</div>
+                                                    )}
                                                 </td>
                                                 <td>
                                                     <div className="admin-acciones">
@@ -371,13 +375,15 @@ function UsuariosAdmin() {
                                                         >
                                                             <img src={OjoAbierto} alt="Ver" className="admin-accion-btn__icon" />
                                                         </button>
-                                                        <button
-                                                            className="admin-accion-btn"
-                                                            title="Editar permisos"
-                                                            onClick={() => abrirModal(u.idUsuario, 'editar')}
-                                                        >
-                                                            <img src={EditarIcon} alt="Editar" className="admin-accion-btn__icon" />
-                                                        </button>
+                                                        {!u.esAdministrador && (
+                                                            <button
+                                                                className="admin-accion-btn"
+                                                                title="Editar permisos"
+                                                                onClick={() => abrirModal(u.idUsuario, 'editar')}
+                                                            >
+                                                                <img src={EditarIcon} alt="Editar" className="admin-accion-btn__icon" />
+                                                            </button>
+                                                        )}
                                                         <button
                                                             className="admin-accion-btn"
                                                             title="Cambiar estado"
@@ -518,30 +524,32 @@ function UsuariosAdmin() {
                                         <span className="admin-modal__campo-label">Fecha de registro</span>
                                         <span className="admin-modal__campo-valor">{fmtFecha(modal.usuario.fechaRegistro)}</span>
                                     </div>
-                                    <div className="admin-modal__campo">
-                                        <span className="admin-modal__campo-label">Permiso de descarga</span>
-                                        {modal.modo === 'ver' ? (
-                                            <img
-                                                src={modal.usuario.tienePermisoDescarga ? CheckIcon : CrossIcon}
-                                                alt={modal.usuario.tienePermisoDescarga ? 'Activo' : 'Inactivo'}
-                                                style={{ width: 18, height: 18, objectFit: 'contain' }}
-                                            />
-                                        ) : (
-                                            <div className="admin-modal__permiso-row">
-                                                <label className="admin-modal__toggle">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={permisoEdit}
-                                                        onChange={e => setPermisoEdit(e.target.checked)}
-                                                    />
-                                                    <span className="admin-modal__toggle-track" />
-                                                </label>
-                                                <span className="admin-modal__toggle-label">
-                                                    {permisoEdit ? 'Activo' : 'Inactivo'}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
+                                    {!modal.usuario.esAdministrador && (
+                                        <div className="admin-modal__campo">
+                                            <span className="admin-modal__campo-label">Permiso de descarga</span>
+                                            {modal.modo === 'ver' ? (
+                                                <img
+                                                    src={modal.usuario.tienePermisoDescarga ? CheckIcon : CrossIcon}
+                                                    alt={modal.usuario.tienePermisoDescarga ? 'Activo' : 'Inactivo'}
+                                                    style={{ width: 18, height: 18, objectFit: 'contain' }}
+                                                />
+                                            ) : (
+                                                <div className="admin-modal__permiso-row">
+                                                    <label className="admin-modal__toggle">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={permisoEdit}
+                                                            onChange={e => setPermisoEdit(e.target.checked)}
+                                                        />
+                                                        <span className="admin-modal__toggle-track" />
+                                                    </label>
+                                                    <span className="admin-modal__toggle-label">
+                                                        {permisoEdit ? 'Activo' : 'Inactivo'}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Footer */}

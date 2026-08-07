@@ -305,6 +305,8 @@ function PerfilAdmin() {
                     user={sidebarUser}
                     titulo="Mi perfil y preferencias"
                     actions={headerActions}
+                    onHome={() => navigate('/admin/dashboard')}
+                    onBack={() => navigate(-1)}
                 >
                     <div className="editar-perfil-page">
 

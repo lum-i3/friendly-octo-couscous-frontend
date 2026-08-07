@@ -217,7 +217,7 @@ function SolicitudesAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Solicitudes de descarga" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Solicitudes de descarga" actions={headerActions} onHome={() => navigate('/admin/dashboard')} onBack={() => navigate(-1)}>
 
                     <div className="admin-tabla-container">
                         <h2 className="admin-tabla-titulo">Últimas solicitudes</h2>

@@ -82,8 +82,8 @@ function RespaldoAdmin() {
             if (!res.ok) throw new Error(json.mensaje ?? 'Error al detectar fechas');
             const d = json.datos;
             setFechasDetectadas({ aw: d.fechaInicioAW, fv: d.fechaInicioFV, eolico: d.fechaInicioEolico });
-        } catch (err) {
-            await Swal.fire({ icon: 'error', title: 'Error al detectar', text: err.message });
+        } catch {
+            await Swal.fire({ icon: 'error', title: 'No se pudieron detectar las fechas', text: 'No fue posible obtener la información. Verifica la conexión con las fuentes de datos e inténtalo de nuevo.' });
         } finally {
             setDetectandoFechas(false);
         }
@@ -126,10 +126,10 @@ function RespaldoAdmin() {
             });
             const json = await res.json();
             if (!res.ok) throw new Error(json.mensaje ?? 'Error al iniciar respaldo');
-            await Swal.fire({ icon: 'success', title: 'Respaldo iniciado', text: json.mensaje, timer: 3000, showConfirmButton: false });
+            await Swal.fire({ icon: 'success', title: 'Respaldo iniciado', text: 'El proceso comenzó en segundo plano. El estado se actualizará automáticamente en esta pantalla.', timer: 3000, showConfirmButton: false });
             cargarEstadoRespaldo();
-        } catch (err) {
-            await Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+        } catch {
+            await Swal.fire({ icon: 'error', title: 'No se pudo iniciar el respaldo', text: 'Verifica que no haya otro proceso en progreso para esta fuente e inténtalo de nuevo.' });
         }
     }, [respaldoDesde, respaldoHasta, cargarEstadoRespaldo]);
 
@@ -154,7 +154,7 @@ function RespaldoAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Respaldo histórico" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Respaldo histórico" actions={headerActions} onHome={() => navigate('/admin/dashboard')} onBack={() => navigate(-1)}>
 
                     {!esSuperAdmin ? (
                         <div style={{ textAlign: 'center', padding: '60px 20px', fontFamily: 'Inter, system-ui, sans-serif', color: '#6b7a80' }}>

@@ -331,7 +331,7 @@ function AdministradoresAdmin() {
         <div className="page-with-header">
             <Header />
             <div className="page-with-header__body">
-                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Administradores activos" actions={headerActions}>
+                <SidebarLayout navItems={getAdminItems()} user={sidebarUser} titulo="Administradores activos" actions={headerActions} onHome={() => navigate('/admin/dashboard')} onBack={() => navigate(-1)}>
 
                     {accesoDenegado ? (
                         <div style={{ textAlign: 'center', padding: '60px 20px', fontFamily: 'Inter, system-ui, sans-serif', color: '#6b7a80' }}>
