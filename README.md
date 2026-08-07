@@ -1,7 +1,8 @@
 # AWSHEF — Frontend
 
-> **Sistema de Monitoreo de Variables Climáticas y Eléctricas**
-> **Centro Nacional de Investigación y Desarrollo Tecnológico — CENIDET**
+- **Universidad Tecnológica de Emiliano Zapata — UTEZ**
+- **APLICACIÓN WEB DE MONITOREO DE VARIABLES CLIMÁTICAS PARA SISTEMA HÍBRIDO EÓLICO FOTOVOLTAICO**
+- **Centro Nacional de Investigación y Desarrollo Tecnológico — CENIDET**
 
 ---
 
@@ -9,7 +10,8 @@
 
 | Nombre Completo | Rol / Tareas Principales | Usuario GitHub |
 | :--- | :--- | :--- |
-| Ian Alejandro Rivera Torres | Arquitectura, Frontend, Diseño UI | @IanRT08 |
+| Ian Alejandro Rivera Torres | Frontend Developer & UI/UX (Módulos Impares): Arquitectura React, maquetación en Figma, vistas de autenticación/perfil, gráficas interactivas y módulo de reportes/descargas. | @IanRT08 |
+| Dana Bahena Díaz |Frontend Developer (Módulos Pares): Vistas de administración/permisos, dashboard principal, mapa interactivo, paneles estadísticos y componentes de alertas/notificaciones. | @lum-i3 |
 
 ---
 
