@@ -386,6 +386,7 @@
   outline: none;
   width: 100%;
   transition: border-color 0.15s;
+  color-scheme: light;
 }
 
 .filtro-fechas__date-input:focus {

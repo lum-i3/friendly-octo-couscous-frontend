@@ -259,6 +259,7 @@
   color: #10475C;
   font-family: 'Inter', system-ui, sans-serif;
   transition: border-color 0.2s, box-shadow 0.2s;
+  color-scheme: light;
 }
 
 .descargar-field-group input[type="date"]:focus,
