@@ -103,11 +103,11 @@ function AdministradoresAdmin() {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => {
-                if (res.status === 403) { setAccesoDenegado(true); setCargando(false); return null; }
+                if (res.status === 403) { navigate('/error/403'); return null; }
                 return res.ok ? res.json() : Promise.reject(new Error('Error del servidor'));
             })
             .then(json => {
-                if (json) { setAdmins(json.datos ?? []); setCargando(false); }
+                if (json) { setAdmins(json.datos?.contenido ?? []); setCargando(false); }
             })
             .catch(() => { setErrorTabla('No se pudo cargar la lista de administradores.'); setCargando(false); });
     }, []);

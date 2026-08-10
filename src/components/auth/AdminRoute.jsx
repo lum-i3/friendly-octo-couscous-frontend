@@ -13,7 +13,7 @@ function AdminRoute({ children }) {
     }
     const rol = getTokenRole();
     if (rol !== 'ADMINISTRADOR' && rol !== 'SUPERADMINISTRADOR') {
-        return <Navigate to="/usuario/dashboard" replace />;
+        return <Navigate to="/error/403" replace />;
     }
     return children;
 }

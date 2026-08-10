@@ -482,6 +482,7 @@ function DescargarGraficas() {
                 formato,
             });
             if (tipo === 'ELECTRICO') params.set('fuente', fuente);
+            params.set('tipoGrafica', tipoGrafica);
             for (const v of variables)    params.append('variables', v);
             for (const s of estadisticas) params.append('estadisticas', s);
 
