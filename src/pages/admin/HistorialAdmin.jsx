@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Header from '../../components/Header';
@@ -93,14 +93,19 @@ function HistorialAdmin() {
     const [ordenFecha, setOrdenFecha] = useState('desc');       // 'asc' | 'desc'
     const [tipoFiltro, setTipoFiltro] = useState('');           // '' = todos
 
+    const abortRef = useRef(null);
+
     /* ── Carga ── */
     const cargarHistorial = useCallback(() => {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
         setErrorTabla(null);
+        const ctrl = new AbortController();
+        abortRef.current = ctrl;
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         fetch(`${BASE_URL}/api/admin/historial?${qs}`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
@@ -110,10 +115,10 @@ function HistorialAdmin() {
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => { setErrorTabla('No se pudo cargar el historial de acciones.'); setCargando(false); });
+            .catch(err => { if (err.name !== 'AbortError') { setErrorTabla('No se pudo cargar el historial de acciones.'); setCargando(false); } });
     }, [pagina]);
 
-    useEffect(() => { cargarHistorial(); }, [cargarHistorial]);
+    useEffect(() => { cargarHistorial(); return () => { abortRef.current?.abort(); }; }, [cargarHistorial]);
 
     /* ── Tipos únicos para el selector ── */
     const tiposDisponibles = useMemo(() => {

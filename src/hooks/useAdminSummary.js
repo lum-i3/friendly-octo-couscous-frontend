@@ -44,6 +44,8 @@ function useAdminSummary() {
                 setResumen({ total, activos, bloqueados, sinConfirmar, inactivos, historial });
                 setCargando(false);
             }
+        }).catch(() => {
+            if (!cancelado) setCargando(false);
         });
 
         return () => { cancelado = true; };

@@ -12,6 +12,8 @@ import UserIconDefault from '../../assets/Icons/UserIcon.png';
 import '../../styles/dashboard.css';
 import '../../styles/perfil.css';
 
+const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+
 const ALERTAS = [
     { key: 'TODAS',   label: 'Recibir todas las alertas'   },
     { key: 'SISTEMA', label: 'Recibir solo las necesarias' },
@@ -86,14 +88,17 @@ function PerfilAdmin() {
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         if (!token) return;
-        fetch('/api/alertas/configuracion', {
+        const ctrl = new AbortController();
+        fetch(`${BASE_URL}/api/alertas/configuracion`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.ok ? res.json() : null)
             .then(json => {
                 if (json?.datos?.preferencia) setPreferencia(json.datos.preferencia);
             })
-            .catch(() => {});
+            .catch(err => { if (err.name !== 'AbortError') console.warn('[PerfilAdmin] No se pudo cargar la preferencia de alertas.'); });
+        return () => ctrl.abort();
     }, []);
 
     const sidebarUser = perfil ? {
@@ -109,7 +114,7 @@ function PerfilAdmin() {
         setGuardandoG(true);
         const token = localStorage.getItem('jwt');
         try {
-            const res = await fetch('/api/user/profile', {
+            const res = await fetch(`${BASE_URL}/api/user/profile`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ fotoPerfil: fotoNueva }),
@@ -168,7 +173,7 @@ function PerfilAdmin() {
         if (fotoNueva)      body.fotoPerfil     = fotoNueva;
 
         try {
-            const res = await fetch('/api/user/profile', {
+            const res = await fetch(`${BASE_URL}/api/user/profile`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify(body),
@@ -211,7 +216,7 @@ function PerfilAdmin() {
         setGuardandoP(true);
         const token = localStorage.getItem('jwt');
         try {
-            const res = await fetch('/api/user/change-password', {
+            const res = await fetch(`${BASE_URL}/api/user/change-password`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({
@@ -260,7 +265,7 @@ function PerfilAdmin() {
         setPreferencia(nuevaPref);
         const token = localStorage.getItem('jwt');
         try {
-            const res = await fetch('/api/alertas/configuracion', {
+            const res = await fetch(`${BASE_URL}/api/alertas/configuracion`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ preferencia: nuevaPref }),

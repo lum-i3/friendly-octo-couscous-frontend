@@ -15,6 +15,9 @@ function UserRoute({ children }) {
     if (rol === 'ADMINISTRADOR' || rol === 'SUPERADMINISTRADOR') {
         return <Navigate to="/admin/dashboard" replace />;
     }
+    if (rol !== 'USUARIO') {
+        return <Navigate to="/login" replace />;
+    }
     return children;
 }
 

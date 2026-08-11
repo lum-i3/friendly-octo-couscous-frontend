@@ -3,7 +3,6 @@ import TecNMLogo from '../assets/Logos/TecNM_logo.png';
 import CenidetLogo from '../assets/Logos/Logo_cenidet.png';
 import '../styles/styles.css';
 
-// TODO: reemplazar estos "#" por las URLs reales de cada institución.
 const LOGOS = [
     { src: SepLogo, alt: 'Secretaría de Educación Pública', href: 'https://www.gob.mx/sep' },
     { src: TecNMLogo, alt: 'Tecnológico Nacional de México', href: 'https://www.tecnm.mx/' },

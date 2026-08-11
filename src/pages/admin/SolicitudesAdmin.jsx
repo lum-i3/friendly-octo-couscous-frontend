@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Header from '../../components/Header';
@@ -82,6 +82,7 @@ function SolicitudesAdmin() {
     /* ── Modal ── */
     const [modal, setModal] = useState(null);   // null | DownloadRequestDetailDTO
     const [procesando, setProcesando] = useState(false);
+    const abortRef = useRef(null);
 
     /* ── Carga ── */
     const cargarSolicitudes = useCallback(() => {
@@ -89,8 +90,11 @@ function SolicitudesAdmin() {
         if (!token) { setCargando(false); return; }
         setCargando(true);
         setErrorTabla(null);
+        const ctrl = new AbortController();
+        abortRef.current = ctrl;
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         fetch(`${BASE_URL}/api/solicitudes?${qs}`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
@@ -100,10 +104,10 @@ function SolicitudesAdmin() {
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => { setErrorTabla('No se pudo cargar la lista de solicitudes.'); setCargando(false); });
+            .catch(err => { if (err.name !== 'AbortError') { setErrorTabla('No se pudo cargar la lista de solicitudes.'); setCargando(false); } });
     }, [pagina]);
 
-    useEffect(() => { cargarSolicitudes(); }, [cargarSolicitudes]);
+    useEffect(() => { cargarSolicitudes(); return () => { abortRef.current?.abort(); }; }, [cargarSolicitudes]);
 
     /* ── Filtro + sort cliente ── */
     const solicitudesFiltradas = useMemo(() => {

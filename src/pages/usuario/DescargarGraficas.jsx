@@ -164,12 +164,15 @@ function DescargarGraficas() {
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         if (!token) return;
+        const ctrl = new AbortController();
         fetch(`${BASE_URL}/api/estadisticas/fechas`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(r => r.json())
             .then(j => { if (j.exitoso) setFechasMin(j.datos); })
-            .catch(() => {});
+            .catch(err => { if (err.name !== 'AbortError') console.warn('[DescargarGraficas] No se pudieron cargar las fechas mínimas.'); });
+        return () => ctrl.abort();
     }, []);
 
     /* Fecha mínima según tipo/fuente para el datetime-local picker (slice a HH:MM) */

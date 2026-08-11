@@ -3,14 +3,13 @@ import "../../styles/perfil.css"; // Estilos del sidebar
 import SidebarLayout from "../../components/SidebarLayout";
 
 function Perfil() {
-  // Estados para manejar el formulario de forma interactiva
   const [email] = useState("correo@ejemplo.com");
   const [username] = useState("Lucia López");
-  const [alertType] = useState("needed"); // 'all' | 'needed' | 'none'
+  const [alertType, setAlertType] = useState("needed"); // 'all' | 'needed' | 'none'
 
   const handleSave = (e) => {
     e.preventDefault();
-    console.log("Datos guardados:", { email, username, alertType });
+
   };
 
   return (

@@ -77,6 +77,7 @@ function UsuariosAdmin() {
     const [termino, setTermino] = useState('');
     const [orden, setOrden] = useState('asc');
     const searchTimer = useRef(null);
+    const abortRef = useRef(null);
 
     /* ── Estado de modal ── */
     const [modal, setModal] = useState(null);   // null | { modo: 'ver'|'editar', usuario: UserDetailDTO }
@@ -90,9 +91,12 @@ function UsuariosAdmin() {
         if (!token) { setCargando(false); return; }
         setCargando(true);
         setErrorTabla(null);
+        const ctrl = new AbortController();
+        abortRef.current = ctrl;
         const qs = new URLSearchParams({ page: pagina, size: PAGE_SIZE });
         if (termino) qs.set('termino', termino);
         fetch(`${BASE_URL}/api/admin/usuarios?${qs}`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.ok ? res.json() : Promise.reject(new Error('Error del servidor')))
@@ -102,10 +106,12 @@ function UsuariosAdmin() {
                 setTotalElementos(json?.datos?.totalElementos ?? 0);
                 setCargando(false);
             })
-            .catch(() => { setErrorTabla('No se pudo cargar la lista de usuarios.'); setCargando(false); });
+            .catch(err => { if (err.name !== 'AbortError') { setErrorTabla('No se pudo cargar la lista de usuarios.'); setCargando(false); } });
     }, [pagina, termino]);
 
-    useEffect(() => { cargarUsuarios(); }, [cargarUsuarios]);
+    useEffect(() => { cargarUsuarios(); return () => { abortRef.current?.abort(); }; }, [cargarUsuarios]);
+
+    useEffect(() => { return () => { clearTimeout(searchTimer.current); }; }, []);
 
     /* ── Búsqueda debounced ── */
     const handleBusqueda = (e) => {

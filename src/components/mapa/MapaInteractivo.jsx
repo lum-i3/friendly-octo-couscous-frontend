@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import TemperaturaIcon from '../../assets/Icons/TemperaturaIcon.png';
 import VelocidadVientoIcon from '../../assets/Icons/VelocidadVientoIcon.png';
 import RadianciaIcon from '../../assets/Icons/RadianciaIcon.png';
 
-// Parche para íconos del marcador con Vite
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl:       'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl:     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconRetinaUrl: markerIcon2x,
+    iconUrl:       markerIcon,
+    shadowUrl:     markerShadow,
 });
 
 const CENIDET = [18.879620389097248, -99.22186407553191];
@@ -84,7 +86,7 @@ function MapaInteractivo({ pantallaCompleta, onTogglePantallaCompleta, clima }) 
                             onClick={() => handleIcono(item.key)}
                             title={item.label}
                         >
-                            <img src={item.icon} alt={item.label} className="estacion-icon-bar__icon" />
+                            <img src={item.icon} alt={item.label} className="estacion-icon-bar__icon" loading="lazy" />
                         </button>
                     ))}
                 </div>

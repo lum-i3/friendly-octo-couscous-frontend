@@ -93,13 +93,18 @@ function AdministradoresAdmin() {
     const [formErrs, setFormErrs] = useState({});
     const [creando, setCreando] = useState(false);
 
+    const abortRef = useRef(null);
+
     /* ── Carga ── */
     const cargarAdmins = useCallback(() => {
         const token = localStorage.getItem('jwt');
         if (!token) { setCargando(false); return; }
         setCargando(true);
         setErrorTabla(null);
+        const ctrl = new AbortController();
+        abortRef.current = ctrl;
         fetch(`${BASE_URL}/api/admin/administradores`, {
+            signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => {
@@ -109,10 +114,10 @@ function AdministradoresAdmin() {
             .then(json => {
                 if (json) { setAdmins(json.datos?.contenido ?? []); setCargando(false); }
             })
-            .catch(() => { setErrorTabla('No se pudo cargar la lista de administradores.'); setCargando(false); });
-    }, []);
+            .catch(err => { if (err.name !== 'AbortError') { setErrorTabla('No se pudo cargar la lista de administradores.'); setCargando(false); } });
+    }, [navigate]);
 
-    useEffect(() => { cargarAdmins(); }, [cargarAdmins]);
+    useEffect(() => { cargarAdmins(); return () => { abortRef.current?.abort(); }; }, [cargarAdmins]);
 
     /* ── Filtro + sort + paginación (cliente) ── */
     const adminsFiltrados = useMemo(() => {
