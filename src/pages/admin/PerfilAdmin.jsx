@@ -97,7 +97,7 @@ function PerfilAdmin() {
             .then(json => {
                 if (json?.datos?.preferencia) setPreferencia(json.datos.preferencia);
             })
-            .catch(err => { if (err.name !== 'AbortError') console.warn('[PerfilAdmin] No se pudo cargar la preferencia de alertas.'); });
+            .catch(() => { /* preferencia de alertas no disponible, se mantiene valor por defecto */ });
         return () => ctrl.abort();
     }, []);
 

@@ -9,7 +9,9 @@ class ErrorBoundary extends Component {
     }
 
     componentDidCatch(error, info) {
-        console.error('[ErrorBoundary] Error no capturado:', error, info?.componentStack);
+        if (import.meta.env.DEV) {
+            console.error('[ErrorBoundary] Error no capturado:', error, info?.componentStack);
+        }
     }
 
     render() {

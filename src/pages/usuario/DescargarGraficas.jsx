@@ -169,9 +169,9 @@ function DescargarGraficas() {
             signal: ctrl.signal,
             headers: { Authorization: `Bearer ${token}` },
         })
-            .then(r => r.json())
-            .then(j => { if (j.exitoso) setFechasMin(j.datos); })
-            .catch(err => { if (err.name !== 'AbortError') console.warn('[DescargarGraficas] No se pudieron cargar las fechas mínimas.'); });
+            .then(r => r.ok ? r.json() : null)
+            .then(j => { if (j?.exitoso) setFechasMin(j.datos); })
+            .catch(err => { if (err.name !== 'AbortError') { /* fechas mínimas no disponibles, los inputs quedan sin límite */ } });
         return () => ctrl.abort();
     }, []);
 

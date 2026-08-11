@@ -61,7 +61,7 @@ function App() {
     }, []);
 
     return (
-        <Suspense fallback={null}>
+        <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
             <Routes>
 
                 {/* Públicas — redirigen al dashboard si hay sesión activa */}

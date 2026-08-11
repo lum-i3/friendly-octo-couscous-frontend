@@ -124,7 +124,6 @@ function FormRegistro() {
             });
             navigate('/verificar-cuenta', { state: { correo: valores.correo } });
         } catch (err) {
-            console.error('[Registro] Error:', err);
             const mensaje = err?.message || 'Error inesperado. Intenta de nuevo.';
             setErrorApi(mensaje);
             Swal.fire({

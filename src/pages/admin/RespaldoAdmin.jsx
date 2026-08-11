@@ -145,7 +145,7 @@ function RespaldoAdmin() {
     const sidebarUser = perfil ? { nombre: perfil.nombreCompleto || perfil.nombreUsuario, foto: perfil.fotoPerfil || null } : null;
 
     const headerActions = (
-        <button className="nav-action-btn nav-action-btn--danger" title="Cerrar sesión" onClick={handleLogout}>
+        <button className="nav-action-btn nav-action-btn--danger" title="Cerrar sesión" aria-label="Cerrar sesión" onClick={handleLogout}>
             <LogoutIcon />
         </button>
     );

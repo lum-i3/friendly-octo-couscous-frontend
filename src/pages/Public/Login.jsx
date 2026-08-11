@@ -5,7 +5,6 @@ import Header from '../../components/Header';
 import FormInput from '../../components/FormInput';
 import Button from '../../components/Button';
 import LinkText from '../../components/LinkText';
-import Checkbox from '../../components/Checkbox';
 import NavBackBtn from '../../components/NavBackBtn';
 import NavHomeBtn from '../../components/NavHomeBtn';
 import Imagen from '../../assets/General/ImagenLogin.avif';
@@ -16,7 +15,6 @@ import '../../styles/login.css';
 const ESTADO_INICIAL = {
     correo: '',
     contrasenia: '',
-    recordarme: false,
 };
 
 function validarCampoLogin(name, valores) {
@@ -55,10 +53,6 @@ function Login() {
         setErrores((prev) => ({ ...prev, [name]: validarCampoLogin(name, valores) }));
     };
 
-    const handleCheckboxChange = (e) => {
-        setValores((prev) => ({ ...prev, recordarme: e.target.checked }));
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (cargando) return;
@@ -75,7 +69,17 @@ function Login() {
         try {
             const data = await login(valores.correo, valores.contrasenia);
             if (data?.token) localStorage.setItem('jwt', data.token);
-            navigate('/');
+            if (data?.debeRestablecerPassword) {
+                navigate('/admin/perfil');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Contraseña temporal',
+                    text: 'Estás usando una contraseña temporal. Cámbiala antes de continuar.',
+                    confirmButtonColor: '#176682',
+                });
+            } else {
+                navigate('/');
+            }
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -126,12 +130,6 @@ function Login() {
                                 />
 
                                 <div className="login-extra-options">
-                                    <Checkbox
-                                        label="Recordarme"
-                                        name="recordarme"
-                                        checked={valores.recordarme}
-                                        onChange={handleCheckboxChange}
-                                    />
                                     <LinkText to="/recuperar-contrasenia">¿Olvidaste tu contraseña?</LinkText>
                                 </div>
 

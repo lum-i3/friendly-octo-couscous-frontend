@@ -13,6 +13,15 @@ import '../../styles/dashboard.css';
 import '../../styles/perfil.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+const MAX_FOTO_MB = 5;
+
+function mimeDeBase64(b64) {
+    if (b64.startsWith('/9j/'))        return 'image/jpeg';
+    if (b64.startsWith('iVBORw0KGgo')) return 'image/png';
+    if (b64.startsWith('R0lGOD'))      return 'image/gif';
+    if (b64.startsWith('UklGR'))       return 'image/webp';
+    return 'image/jpeg';
+}
 
 const ALERTAS = [
     { key: 'TODAS',   label: 'Recibir todas las alertas'   },
@@ -72,7 +81,7 @@ function EditarPerfil() {
         setNombreUsuario(perfil.nombreUsuario || '');
         setNombreCompleto(perfil.nombreCompleto || '');
         if (perfil.fotoPerfil) {
-            setFotoPreview('data:image/jpeg;base64,' + perfil.fotoPerfil);
+            setFotoPreview(`data:${mimeDeBase64(perfil.fotoPerfil)};base64,${perfil.fotoPerfil}`);
         }
     }, [perfil]);
 
@@ -89,7 +98,7 @@ function EditarPerfil() {
             .then(json => {
                 if (json?.datos?.preferencia) setPreferencia(json.datos.preferencia);
             })
-            .catch(err => { if (err.name !== 'AbortError') console.warn('[EditarPerfil] No se pudo cargar la preferencia de alertas.'); });
+            .catch(() => { /* preferencia de alertas no disponible, se mantiene valor por defecto */ });
         return () => ctrl.abort();
     }, []);
 
@@ -104,6 +113,16 @@ function EditarPerfil() {
     const handleFotoChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        if (file.size > MAX_FOTO_MB * 1024 * 1024) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Imagen demasiado grande',
+                text: `La imagen no puede superar los ${MAX_FOTO_MB} MB.`,
+                confirmButtonColor: '#176682',
+            });
+            e.target.value = '';
+            return;
+        }
         const reader = new FileReader();
         reader.onloadend = () => {
             setFotoPreview(reader.result);
