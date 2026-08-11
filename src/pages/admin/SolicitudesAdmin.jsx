@@ -15,6 +15,7 @@ import '../../styles/dashboard.css';
 import '../../styles/admin.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+const esc = s => (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const PAGE_SIZE = 20;
 
 const ESTADO_SOLICITUD_LABEL = {
@@ -137,7 +138,7 @@ function SolicitudesAdmin() {
         const esAprobar = desicion === 'APROBADA';
         const { isConfirmed } = await Swal.fire({
             title: esAprobar ? '¿Aprobar solicitud?' : '¿Rechazar solicitud?',
-            html: `La solicitud de <strong>${solicitud.nombreCompleto ?? solicitud.nombreUsuario}</strong> será <strong>${esAprobar ? 'aprobada' : 'rechazada'}</strong>.`,
+            html: `La solicitud de <strong>${esc(solicitud.nombreCompleto ?? solicitud.nombreUsuario)}</strong> será <strong>${esAprobar ? 'aprobada' : 'rechazada'}</strong>.`,
             icon: esAprobar ? 'question' : 'warning',
             showCancelButton: true,
             confirmButtonText: esAprobar ? 'Aprobar' : 'Rechazar',

@@ -22,6 +22,7 @@ import '../../styles/admin.css';
 import '../../styles/perfil.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+const esc = s => (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const PAGE_SIZE = 10;
 
 const ESTADO_LABEL = {
@@ -152,7 +153,7 @@ function AdministradoresAdmin() {
 
         const { isConfirmed } = await Swal.fire({
             title: '¿Cambiar tipo de administrador?',
-            html: `<strong>${adminSeleccionado.nombreCompleto || adminSeleccionado.nombreUsuario}</strong> pasará a ser <strong>${nuevoTipo === 'SUPERADMINISTRADOR' ? 'Superadministrador' : 'Administrador'}</strong>.`,
+            html: `<strong>${esc(adminSeleccionado.nombreCompleto || adminSeleccionado.nombreUsuario)}</strong> pasará a ser <strong>${nuevoTipo === 'SUPERADMINISTRADOR' ? 'Superadministrador' : 'Administrador'}</strong>.`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Cambiar',
@@ -194,8 +195,8 @@ function AdministradoresAdmin() {
             title: 'Cambiar estado',
             html: `
                 <p style="margin:0 0 12px;font-size:0.88rem;text-align:left">
-                    Admin: <strong>${admin.nombreCompleto || admin.nombreUsuario}</strong><br/>
-                    Estado actual: <strong>${ESTADO_LABEL[estadoActual] ?? estadoActual}</strong>
+                    Admin: <strong>${esc(admin.nombreCompleto || admin.nombreUsuario)}</strong><br/>
+                    Estado actual: <strong>${esc(ESTADO_LABEL[estadoActual] ?? estadoActual)}</strong>
                 </p>
                 <label style="display:block;text-align:left;font-size:0.82rem;font-weight:600;margin-bottom:4px">Nuevo estado</label>
                 <select id="swal-nuevo-estado" class="swal2-select" style="margin:0 0 10px;width:100%">${opciones}</select>
@@ -267,7 +268,7 @@ function AdministradoresAdmin() {
 
         const { isConfirmed } = await Swal.fire({
             title: '¿Crear administrador?',
-            html: `Se creará la cuenta para <strong>${form.nombreCompleto}</strong> como <strong>${form.tipoAdministrador === 'SUPERADMINISTRADOR' ? 'Superadministrador' : 'Administrador'}</strong>. Sus credenciales serán enviadas por correo.`,
+            html: `Se creará la cuenta para <strong>${esc(form.nombreCompleto)}</strong> como <strong>${form.tipoAdministrador === 'SUPERADMINISTRADOR' ? 'Superadministrador' : 'Administrador'}</strong>. Sus credenciales serán enviadas por correo.`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Crear',

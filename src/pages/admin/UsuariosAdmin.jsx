@@ -18,6 +18,7 @@ import '../../styles/dashboard.css';
 import '../../styles/admin.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+const esc = s => (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const PAGE_SIZE = 20;
 
 const ESTADO_LABEL = {
@@ -168,7 +169,7 @@ function UsuariosAdmin() {
 
         const { isConfirmed } = await Swal.fire({
             title: '¿Guardar cambios?',
-            html: `Se <strong>${permisoEdit ? 'activará' : 'desactivará'}</strong> el permiso de descarga de <strong>${nombreCompleto}</strong>.`,
+            html: `Se <strong>${permisoEdit ? 'activará' : 'desactivará'}</strong> el permiso de descarga de <strong>${esc(nombreCompleto)}</strong>.`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Guardar',
@@ -210,8 +211,8 @@ function UsuariosAdmin() {
             title: 'Cambiar estado de usuario',
             html: `
                 <p style="margin:0 0 12px;font-size:0.88rem;text-align:left">
-                    Usuario: <strong>${usuario.nombreCompleto}</strong><br/>
-                    Estado actual: <strong>${ESTADO_LABEL[estadoActual] ?? estadoActual}</strong>
+                    Usuario: <strong>${esc(usuario.nombreCompleto)}</strong><br/>
+                    Estado actual: <strong>${esc(ESTADO_LABEL[estadoActual] ?? estadoActual)}</strong>
                 </p>
                 <label style="display:block;text-align:left;font-size:0.82rem;font-weight:600;margin-bottom:4px">Nuevo estado</label>
                 <select id="swal-nuevo-estado" class="swal2-select" style="margin:0 0 10px;width:100%">${opciones}</select>
